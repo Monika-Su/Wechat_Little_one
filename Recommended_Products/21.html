@@ -58,7 +58,7 @@
     var appid = "wx75653af0649a1e91";
     var WECHAT_PUBLIC_OPENID_COOKIE = appid + "__wopenid";
     var mchId = "1271010601";
-    var retUrlPrefix="http://retclub.retchat.com/tracking/";
+    var retUrlPrefix="XX/tracking/";
     var retCert="8c143757ef97ae13dff23decc898af3a";
     var shouldLoginRetclubFirst = "true";
     var _RETUID_COOKIE = "__retuid";
@@ -207,22 +207,22 @@
     function onceBuy(){
         if(isLogin=="1") {
             addCart();
-            window.location = "http://retclub.retchat.com/retclub/2/0/21/";
+            window.location = "XX/retclub/2/0/21/";
         }
         else if(isLogin.length==0||isLogin=="0")
         {
             RET.cookieObj.setLocalCookie("isLogin" + retchatAccount, 0, 3650);
-            window.location ="http://retclub.retchat.com/retclub/2/0/3/";
+            window.location ="XX/retclub/2/0/3/";
         }
     }
     function register() {
         if(isLogin=="1") {
-            window.location = "http://retclub.retchat.com/retclub/2/0/21/";
+            window.location = "XX/retclub/2/0/21/";
         }
         else if(isLogin.length==0||isLogin=="0")
         {
             RET.cookieObj.setLocalCookie("isLogin" + retchatAccount, 0, 3650);
-            window.location ="http://retclub.retchat.com/retclub/2/0/3";
+            window.location ="XX/retclub/2/0/3";
         }
     }
 </script>
