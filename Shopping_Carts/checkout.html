@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<title>##title</title>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/retclub.css">
+	<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+	<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+</head>
+<style type="text/css">
+	.iheader {
+		border-bottom: 2px groove #b1b0b1;
+		height: 70px;
+		text-align: center;
+	}
+	.pointRight {
+		margin-top: -28px;
+		text-align: right;
+		font-size:15px;
+	}
+	.align-right {
+		text-align: right;
+	}
+	.float-right {
+		float: right;
+	}
+	.form-control {
+		height: 30px;
+	}
+	.panel-heading{
+		padding-bottom: 5px;
+	}
+</style>
+<body>
+<div class="container page">
+	<div id="checkPayRow" class="row">
+		<div class="back-header" onclick="history.go(-1);">
+			<div class="back-header-inner">&lt;返回</div>
+			<div class="back-header-title">确认订单</div>
+		</div>
+		<div onclick="changeTab(2)" class="panel panel-info">
+			<div class="panel-heading">收货地址</div>
+			<div class="panel-body">
+				<div id="selectedReceiveInfo"></div>
+				<div id="selectedFullAddr"></div>
+				<div id="selectedReceiveTime"></div>
+				<div class="pointRight">&gt;添加地址</div>
+			</div>
+		</div>
+		<div id="paymentType" class="panel panel-info">
+			<div class="panel-heading">支付方式</div>
+			<div class="panel-body">
+				<input type="radio" name="paymentRadio" checked>微支付
+			</div>
+		</div>
+		<div class="panel panel-info">
+			<div class="integral_checkbox">
+				<label></label>
+			</div>
+			<div class="panel-heading">优惠券抵扣</div>
+			<div class="panel-body">
+				<div style="padding-bottom: 2px;">
+					<div class="coupon">优惠券：<span id="coupon">0</span></div>
+					<div class="useCouponList">可使用的优惠券</div>
+				</div>
+				<div id="coupon_list">
+				</div>
+				<div class="deduction">
+					<div >
+						可用积分：<span id="integration"></span>分
+					</div>
+					<div class="exchange_detail">
+						抵扣点数：<input id="exchangeMoney" value="0" type="text" style="border: 1px solid #ccc;padding: 3px 15px;
+    color: #959595;">
+					</div>
+					<div class="percentage">折扣比例：<span id="discountPercentage">0%</span></div>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-info">
+			<div class="panel-heading">订单金额</div>
+			<div class="panel-body">
+				<div>商品金额：<span id="totalPrice" >0</span></div>
+				<div>商品数量：<span id="totalQrt">0</span></div>
+				<div>运费：<span id="freight">0</span></div>
+				<div>优惠金额：<span id="couponPrice">0</span></div>
+				<div style="padding-bottom: 5px;">积分抵扣金额：¥<span id="integrationPrice">0</span>元</div>
+				<div class="totalPrcie">总计：¥<span id="orderPrice">0</span>元</div>
+			</div>
+		</div>
+		<div class="confirmOrder">
+			<button  id="checkBtn" class="btn btn-info main-button" type="button">确认付款</button>
+		</div>
+	</div>
+	<div id="checkAddressRow" class="row" style="display:none">
+		<div id='checkAddress' class="back-header" onclick="changeTab(1)">
+			<div class="back-header-inner">&lt;返回</div>
+			<div class="back-header-title">选择收货地址</div>
+		</div>
+		<div id="addressList"></div>
+		<button type="button" class="btn btn-success main-button" onclick="newAddr()" style="margin-top: 10px">新增收货地址</button>
+	</div>
+	<div id="newAddressRow" class="row" style="display:none">
+		<div id='newAddress' class="back-header" onclick="changeTab(2)">
+			<div class="back-header-inner">&lt;返回</div>
+			<div class="back-header-title">新增收货地址</div>
+		</div>
+		<form>
+			<input type="hidden" name="id" id="id">
+			<div  class="infoForm col-lg-12 col-md-12 col-xs-12">
+				<label class="region col-lg-2 col-md-2 col-xs-2">姓名：</label>
+				<input type="text" class="form-control col-lg-9 col-md-9 col-xs-9" style="margin-left: 20px" name="receiveName" id="receiveName" placeholder="请输入真实姓名">
+			</div>
+			<div class="infoForm col-lg-12 col-md-12 col-xs-12">
+				<label class="region col-lg-2 col-md-2 col-xs-2">手机：</label>
+				<input type="text" class="form-control col-lg-9 col-md-9 col-xs-9" style="margin-left: 20px" name="receivePhone" id="receivePhone" placeholder="手机">
+			</div>
+			<div class="infoForm col-lg-12 col-md-12 col-xs-12">
+				<label class="region col-lg-2 col-md-2 col-xs-2">地区：</label>
+				<div class="select_margin col-lg-9 col-md-9 col-xs-9">
+					<select id="s_province" name="province" class="col-lg-4 col-xs-4 col-md-4 form-control" style="margin-bottom: -1px;"></select>
+					<select id="s_city" name="city" class="col-lg-4 col-xs-4 col-md-4 form-control" style="margin-bottom: -1px;"></select>
+					<select id="s_county" name="county" class="col-lg-4 col-xs-4 col-md-4 form-control" style="margin-bottom: 30px;"></select>
+				</div>
+				<div id="show"></div>
+			</div>
+			<div  class=" col-lg-12 col-md-12 col-xs-12" style="padding-right: 5px;margin-top: 20px;">
+				<label class="region col-lg-3 col-md-3 col-xs-3">详情地址:</label>
+				<input type="text" class="form-control"style="margin-left:3%;width:72%" name="address" id="address" placeholder="详情地址">
+			</div>
+			<div  class="infoForm col-lg-12 col-md-12 col-xs-12">
+				<label class="region col-lg-2 col-md-2 col-xs-2">邮编：</label>
+				<input type="text" class=" postCode"  name="postcode" id="postcode" placeholder="邮编">
+			</div>
+			<div class="col-lg-12 col-md-12 col-xs-12" style="padding-right: 5px;">
+				<label class="region col-lg-3 col-md-3 col-xs-3" >送货时间:</label>
+				<select class=" form-control" style="margin-left: 2%;width: 73%" name="receiveTime" id="receiveTime">
+					<option value="1">不限</option>
+					<option value="2">只双休日/节假日送货(工作日不用送)</option>
+					<option value="3">只工作日送(双休日/节假日不用送)</option>
+				</select>
+			</div>
+			<button id="save" type="button" class="btn btn-success main-button" onclick="updateAddress()" style="margin-top: 20%">保存</button>
+		</form>
+	</div>
+</div>
+<script src="js/jquery-1.11.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/i18next-1.7.4.min.js"></script>
+<script type="text/javascript" src="js/i18nSetting.js"></script>
+<script class="resources library" src="js/area.js" type="text/javascript"></script>
+<script type="text/javascript">_init_area();</script>
+<script id="ret-js-template" type="text/javascript"></script>
+<script>
+	var retUrlPrefix="http://retclub.retchat.com/tracking/";
+	var retSiteId = 2;
+	var retCert = "8c143757ef97ae13dff23decc898af3a";
+	(function() {
+		var ret = document.createElement('script');
+		ret.type = 'text/javascript';
+		ret.async = true;
+		ret.src = retUrlPrefix + 'ret.js?' + (new Date().getDate());
+		var currentJs = document.getElementById('ret-js-template');
+		currentJs.parentNode.insertBefore(ret, currentJs);
+	})();
+	var _RETUID_COOKIE = "__retuid";
+	var getCookie = function(name){
+		var nameEQ = name + "=";
+		var ca = document.cookie.split(';');
+		for ( var i = 0, limit = ca.length; i < limit; i++) {
+			var c = ca[i];
+			c = c.trim();
+			if (c.indexOf(nameEQ) == 0){
+				return c.substring(nameEQ.length);
+			}
+		}
+		return '';
+	};
+	var extractRootUrl = function (url) {
+		var rootUrl
+		var domain;
+		var matches = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
+		rootUrl = matches && matches[0];
+		domain = matches && matches[1];
+		return rootUrl;
+	};
+	var retchatAccount = "littleone_account";
+	var clubId = "21";
+	var appid = "wx75653af0649a1e91";
+	var WECHAT_PUBLIC_OPENID_COOKIE = appid + "__wopenid";
+	var mchId = "1271010601";
+	var loadAddressUrl = extractRootUrl( retUrlPrefix ) + "agent/wechatOrder/getMemberAddress?siteId=" + retSiteId + "&accountName=";
+	var updateAddressUrl = extractRootUrl( retUrlPrefix ) + "agent/wechatOrder/updateMemberAddress?siteId=" + retSiteId + "&accountName=";
+	var urlPayment = extractRootUrl( retUrlPrefix ) + "agent/wechatOrder/payment?siteId=" + retSiteId + "&clubId=" + clubId +
+			"&retUid=" + getCookie( _RETUID_COOKIE ) + "&mchId=" + mchId + "&memberId=";
+	var urlMember = extractRootUrl( retUrlPrefix ) + "agent/wechat/getRetclubMemberInfo?siteId=" + retSiteId + "&accountName="
+	var urlRedeem = extractRootUrl( retUrlPrefix ) + "agent/wechatOrder/redeem?siteId=" + retSiteId + "&orderChannel=WECHAT&memberId=";
+	var orderListsUrl = extractRootUrl( retUrlPrefix ) + "agent/wechatOrder/getOrderList?siteId=" + retSiteId + "&memberId=";
+	var userId = null;
+	var Phone=null;
+	var integrationPrice=0;
+	var couponPrice=0;
+	var totalPoint=0;
+	var availablePoints=0;
+	var orderPrcie = 0;
+	var freight=0;
+	var FinalPrice=0;
+	var reduceIntegrationPrice=0;
+	var mid = getCookie(retchatAccount);
+	var couponName=null;
+	var selectedAddr;
+	var orderItem;
+	var memberCouponId=null;
+	var jsonStr = window.sessionStorage["orderItem-" + retchatAccount];
+	if(jsonStr){
+		orderItem = JSON.parse(jsonStr);
+	}
+	$(function() {
+			if( typeof(mid)!= "undefined" && mid.length > 0 ) {
+				loadAddress();
+				jQuery.ajax({
+					url: urlMember + mid,
+					success: function (resp) {
+						userId = resp.data.memberId;
+						Phone = resp.data.phoneNumber;
+						//integrationPrice = Math.round((resp.data.availablePoints * 0.01)*100)/100;
+						totalPoint = resp.data.allPoints;
+						availablePoints = resp.data.availablePoints;
+					},
+					async: false
+				});
+				var couponCountURL = extractRootUrl(retUrlPrefix) + "agent/wechatOrder/list/memberCoupons?siteId=" + retSiteId + "&memberId=" + userId;
+				var totalPrice = 0;
+				var totalCount = 0;
+				$("#integration").html(availablePoints);
+//			$("#exchangeMoney").html(integrationPrice);
+				if (orderItem && orderItem.list && orderItem.list.length > 0) {
+					var input = "<input type='checkbox' id='switch'/>";
+					$(".integral_checkbox").prepend(input);
+					$.get(couponCountURL, function (resp) {
+						getCouponList = resp.data;
+						if (getCouponList.length > 0) {
+							var tableContent = "";
+							var UnusedCoupon = [];
+							var totalCoupon = [];
+							$.each(getCouponList, function (index, item) {
+								totalCoupon.push(item.isUsed);
+							});
+							if ($.inArray(false, totalCoupon) != -1) {//未使用过优惠券 false;
+								for (var i = 0; i < totalCoupon.length; i++) {
+									if (totalCoupon[i] == false) {
+										UnusedCoupon.push(totalCoupon[i]);
+									}
+								}
+								$("#coupon").text(UnusedCoupon.length + "个");
+								$.each(getCouponList, function (index, item) {
+									if (item.isUsed == false) {
+										couponName = item.couponVO.name;
+										var CouponId = item.memberCouponId;
+										var getcouponPrice = item.couponVO.pointRuleVO.fixedPoints;
+										tableContent += '<div>';
+										tableContent += '<input class="coupon_price" type="checkbox" value=' + getcouponPrice + ' id=' + CouponId + '>';
+										tableContent += '<label>' + couponName + '</label>';
+										tableContent += '</div>'
+									}
+								})
+							}
+							$("#coupon_list").append(tableContent);
+							$("#coupon_list").hide();
+						}
+						else {
+							$("#coupon").text(0 + "个");
+						}
+					});
+					$.each(orderItem.list, function (index, item) {
+						totalPrice += item.discountPrice * item.buyCount;
+						totalCount += parseInt(item.buyCount);
+						if ((0 < totalPrice) && (totalPrice < 200)) {
+							freight = 10;
+						}
+						else {
+							freight = 0;
+						}
+						$("#freight").text(freight + "元");
+						FinalPrice = Math.round((totalPrice + freight) * 100) / 100;
+						console.log(FinalPrice);
+						$("#orderPrice").html(FinalPrice.toFixed(2));
+						$("#switch").change(function () {
+							if ($(this).prop("checked")) {
+								var reducePrcie = 0;
+								$("#coupon_list").show();
+								$(".coupon_price").change(function () {
+									var coupon_price = 0;
+									$(".coupon_price:checked").each(function () {
+										coupon_price += Number($(this).val());
+									});
+									$("#couponPrice").text(coupon_price.toFixed(2));
+									reducePrcie = Math.round((coupon_price) * 100) / 100;
+									if (reducePrcie <= FinalPrice) {
+										orderPrcie = Math.round((FinalPrice - reducePrcie) * 100) / 100;
+										$("#integrationPrice").text(integrationPrice.toFixed(2));
+										$("#orderPrice").html(orderPrcie.toFixed(2));
+										$("#couponPrice").text(coupon_price.toFixed(2));
+									}
+									else {
+										$(this).removeAttr("checked");
+										alert("优惠抵扣总金额不能超过商品总价格");
+										$("#orderPrice").html(FinalPrice.toFixed(2));
+										$("#integrationPrice").text(0);
+									}
+								});
+							}
+							else {
+								$(".coupon_price").attr("checked", false);
+								$("#coupon_list").hide();
+								$("#orderPrice").html(FinalPrice.toFixed(2));
+								$("#integrationPrice").text(0);
+								$("#couponPrice").text(0);
+							}
+						});
+						$('#exchangeMoney').bind('input propertychange', function () {
+							var costPoints = $('#exchangeMoney').val();
+							var integrationPrice = 0;
+							var regtype = /^[1-9]*[0-9][0-9]*$/;
+							var reg = new RegExp(regtype);
+							if (costPoints.match(reg) == null) {
+								$(this).val("");
+								$("#orderPrice").html(FinalPrice.toFixed(2));
+								$("#integrationPrice").html(integrationPrice.toFixed(2));
+								return true;
+							}
+							else {
+								var costDiscount = extractRootUrl(retUrlPrefix) + "/agent/wechatOrder/calcDiscount/" + retSiteId + "?originalPrice=" + FinalPrice + "&costPoints=" + costPoints;
+								$.getJSON(costDiscount, function (resp) {
+									var respData = resp.data;
+									var FinalDiscountPrice = respData.discountPrice;
+									var reductionRule = respData.reductionRule.percentage;
+									var usedPoint = Math.floor((FinalPrice - 1 / 100) / (reductionRule / 100));
+									var HighestPointPrice = Math.round((usedPoint * (reductionRule / 100)) * 100) / 100;//积分可抵扣的最高金额
+									var HighestOrderPrice = Math.round((FinalPrice - HighestPointPrice) * 100) / 100;
+									$("#discountPercentage").text(reductionRule + "%");
+									if (costPoints >= availablePoints) {
+										$("#exchangeMoney").val(usedPoint);
+										$("#integrationPrice").html(HighestPointPrice);
+										$("#orderPrice").html(HighestOrderPrice.toFixed(2));
+									}
+									else {
+										if (FinalDiscountPrice <= 0) {
+											$("#exchangeMoney").val(usedPoint);
+											$("#integrationPrice").html(HighestPointPrice);
+											$("#orderPrice").html(HighestOrderPrice.toFixed(2));
+										}
+										else {
+											integrationPrice = FinalPrice - FinalDiscountPrice;
+											$("#orderPrice").html(FinalDiscountPrice.toFixed(2));
+											$("#integrationPrice").html(integrationPrice.toFixed(2));
+										}
+									}
+									if ($("#orderPrice").text() == 0.00) {
+										$("#checkBtn").attr("disabled", true)
+									}
+									else {
+										$("#checkBtn").attr("disabled", false)
+									}
+								})
+							}
+						});
+						$("#totalPrice").html("¥ " + totalPrice.toFixed(2) + "元");
+						$("#totalQrt").html(totalCount);
+						$("#checkBtn").html("确认付款");
+					});
+					$.postJSON = function (url, data, callback, errorCallBack) {
+						return jQuery.ajax({
+							headers: {
+								'Accept': 'application/json',
+								'Content-Type': 'application/json'
+							},
+							'type': 'POST',
+							'url': url,
+							'cache': false,
+							'data': JSON.stringify(data),
+							'dataType': 'json',
+							'success': callback,
+							'error': errorCallBack
+						});
+					};
+					$("#checkBtn").click(function () {
+						if (!$("#selectedFullAddr").html()) {
+							alert('请输入收货地址');
+						}
+						else {
+							checkout();
+						}
+					});
+				}
+				else {
+					$("#checkBtn").hide();
+					alert("请先添加商品");
+					window.location = "http://retclub.retchat.com/retclub/2/0/13/";
+				}
+			}
+			else if( mid.length==0){
+				alert("请用户先登录");
+				window.location = "http://retclub.retchat.com/retclub/2/0/8/";
+			}
+	});
+	function checkout() {
+		var orderDetail = {};
+		var freight=Number($("#freight").text());
+		orderDetail.userId = userId;
+		orderDetail.itemList = [];
+		var totalPrice = 0;
+		couponPrice=Number($("#couponPrice").text());
+		var reducePrcie =couponPrice;
+		$.each(orderItem.list, function(index, item){
+			//each item append field as a string and push into array
+			var orderItem = { 'itemId':item.id, 'discountPrice':item.discountPrice, 'quantity':item.buyCount, 'name':item.name, 'category':item.category };
+			orderDetail.itemList.push( orderItem );
+			totalPrice += item.discountPrice * item.buyCount;
+		});
+		FinalPrice=Number($("#orderPrice").html());
+			if($("#switch").prop("checked")==true){
+				orderPrcie=Math.round((FinalPrice-reducePrcie)*100)/100;
+				orderDetail.total=orderPrcie;
+			}
+			else{
+				orderDetail.total = FinalPrice;
+			}
+		orderDetail.discount = 1;
+		orderDetail.userPoints = 0;
+		orderDetail.getPoints = 0;
+		orderDetail.shippingInfo = $("#selectedFullAddr").html() + "，" + $("#selectedReceiveTime").html();
+		orderDetail.discountTotal = 0;
+		$.postJSON(urlPayment + userId, orderDetail, function(resp) {
+					if ( resp.message != "ok")
+						alert(i18n.t('付款失败 pre-pay id'));
+					else if (resp.data) {
+						if ($("#switch").prop("checked") == true) {
+							//$(".coupon_price").change(function () {
+							if($("#coupon_list").html('')){
+								saveOrder(orderDetail, resp.data);
+							}
+							else{
+								$(".coupon_price:checked").each(function () {
+									memberCouponId = $(this).attr("id");
+									saveOrder(orderDetail, resp.data,memberCouponId);
+								});
+								if($(".coupon_price").prop("checked")==false){
+									saveOrder(orderDetail, resp.data);
+								}
+							}
+						}
+						else{
+							saveOrder(orderDetail, resp.data);
+						}
+						sendRetLog();
+					}
+				},
+				function(error) {
+					alert(error.responseText);
+				});
+	}
+	function callpay(data, orderDetail) {
+		WeixinJSBridge.invoke('getBrandWCPayRequest', {
+			"appId": appid,
+			"timeStamp": data.timeStamp,
+			"nonceStr": data.nonceStr,
+			"package": data.prepayId,
+			"signType": "MD5",
+			"paySign": data.paySign
+		}, function(res) {
+			//WeixinJSBridge.log(res.err_msg);
+			if (res.err_msg == "get_brand_wcpay_request:ok") {
+				alert('付款成功');
+				RET.cookieObj.setLocalCookie( "cart-" + retchatAccount, '', 3650 );
+				window.sessionStorage["orderItem-" + retchatAccount] = '';
+				$.get( orderListsUrl + userId, function(resp) {
+					var respData = resp.data;
+					if( respData.content.length > 0 ) {
+						$.each(respData.content, function (i, list) {
+                            alert(list.getPoints)
+						});
+					   }
+					});
+				window.location = "##commodity_address";
+			} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
+				alert('付款取消');
+			}
+			else {
+				alert('付款失败 wechat: ' + JSON.stringify(res));
+			}
+		});
+	}
+	function sendRetLog(){
+		var shopDetail = "";
+		$.each(orderItem.list, function(index, item){
+			if( shopDetail.length > 0 ){
+				shopDetail = shopDetail + ",";
+			}
+			shopDetail = shopDetail + item.code+","+ item.price + "," + item.buyCount;
+		});
+		var urlBuylog = extractRootUrl( retUrlPrefix ) + "action/action.img?" +
+				"t=" +new Date().getTime()+
+				";retUid="+getCookie("__retuid")+
+				";siteId="+retSiteId+
+				";retType=buy;shopDetail=" + shopDetail +
+				";sessionId=" + getCookie("sessionId") +
+				";retCrt="+retCert +";";
+
+		console.log( "send buy log: " + urlBuylog );
+		$.get(urlBuylog, function(resp) {
+			console.log( "buy log return : " + resp );
+		});
+	}
+	function saveOrder( orderDetail, respData, memberCouponId) {
+		var discountTotal = 0;
+		var totalPrice = 0;
+		var freight=Number($("#freight").text());
+		var reducePrcie = Math.round((couponPrice)*100)/100;
+		var orderDetailVO = {};
+		orderDetailVO.orderItems=[];
+		$.each(orderItem.list, function(index, item){
+			var orderItemVO = { 'id':null, 'orderId':null, 'itemId':item.itemId, 'quantity':item.buyCount, 'unitPrice':item.price, 'discount':item.discountPrice, 'name':item.name, 'category':item.category };
+			orderDetailVO.orderItems.push( orderItemVO );
+			totalPrice += item.price * item.buyCount;
+			discountTotal += item.discountPrice * item.buyCount;
+		});
+		FinalPrice=Number($("#orderPrice").html());
+		if($("#switch").prop("checked")){
+			orderPrcie=Math.round((FinalPrice-reducePrcie)*100)/100;
+			orderDetailVO.discountTotal=orderPrcie;
+		}
+		else{
+			orderDetailVO.discountTotal =FinalPrice;
+		}
+		console.log(FinalPrice);
+		orderDetailVO.total = totalPrice;
+		orderDetailVO.getPoints = null;
+		orderDetailVO.orderDate = new Date();
+		orderDetailVO.orderId = null;
+		orderDetailVO.remark = $('#selectedReceiveInfo').text() + "\n<BR>" + $('#selectedFullAddr').text() + "\n<BR>" + $('#selectedReceiveTime').text() + "\n<BR>" +　"retclub, prepayId: " + respData.prepayId + ", member name: " + mid;
+		orderDetailVO.memberId = userId;
+		orderDetailVO.usedPoints =$("#exchangeMoney").val();
+		orderDetailVO.outTradeNo = respData.outTradeNo;
+		orderDetailVO.status = "WAIT_WEIXIN_VERIFY";
+		var urlCheckout;
+		var urlCoupon=extractRootUrl( retUrlPrefix ) + "agent/wechatOrder/saveOrder?siteId=" + retSiteId + "&memberId="+userId;
+		var urlUsedCoupon=  urlCoupon+ "&memberCouponId=" + memberCouponId;
+		if ($("#switch").prop("checked") == true) {
+			if ($(".coupon_price").prop("checked")==true) {
+				urlCheckout=urlUsedCoupon;
+			}
+			else{
+				urlCheckout=urlCoupon;
+			}
+		}
+		else{
+			urlCheckout=urlCoupon;
+		}
+		$.postJSON(urlCheckout, orderDetailVO, function(data) {
+					callpay(respData, orderDetail);
+				},
+				function(error) {
+					alert(i18n.t('付款失败') + ':' + error.responseText);
+				}
+		);
+	}
+	function loadAddress() {
+		$.get(loadAddressUrl + mid, function(resp) {
+			var tableContent = "";
+			if (resp.data.length > 0) {
+				$.each( resp.data, function(i) {
+					tableContent += "<div class='panel panel-info'><div class='panel-heading'></div><ul class='list-group'>";
+					tableContent += "<li class='list-group-item' onclick='chooseAddress(" + JSON.stringify(resp.data[i]) + ")'>";
+					tableContent += '<div>' + resp.data[i].receiveName + " " + resp.data[i].receivePhone + "</div>";
+					tableContent += '<div>' + resp.data[i].province + resp.data[i].city + resp.data[i].district + resp.data[i].address + "</div>";
+					tableContent += '<div>' + changeReceiveTime(resp.data[i].receiveTime) + "</div>";
+					tableContent += "</li><li class='list-group-item'><div class='align-right' onclick='editAddress(" + JSON.stringify(resp.data[i]) + ")'>修改</div></li></ul></div>";
+				});
+				selectedAddr = resp.data[0];
+				setSelectedAddr();
+			} else {
+				changeTab(3);
+			}
+			$("#addressList").html(tableContent);
+		});
+	}
+	function updateAddress() {
+		var reg=/^1[34578]\d{9}$/;
+		var useNameReg=/^[a-zA-Z0-9_\u4e00-\u9fa5]{2,16}$/;
+		if (!$("#receiveName").val()) {
+			alert("请输入姓名");
+			$(this).focus();
+		}
+		else if (!$("#receivePhone").val()) {
+			alert("请输入手机");
+			$(this).focus();
+		}
+		else if(!reg.test($("#receivePhone").val())){
+			alert("手机号码格式输入有误");
+			$(this).focus();
+		}
+		else if(!useNameReg.test($("#receiveName").val())){
+			alert("只允许输入2-16位数字、字母、汉字及下划线");
+			$(this).focus();
+		}
+		else if (!$("#s_province").val() || $("#s_province").val() == '省份') {
+			alert('请选择省份');
+			$(this).focus();
+		}
+	    else if (!$("#s_city").val() || $("#s_city").val() == '地级市') {
+			alert('请选择地级市');
+			$(this).focus();
+		}
+		else if (!$("#s_county").val()||$("#s_county").val()=='市、县级市') {
+			alert("请输入区县");
+			$(this).focus();
+		} else if (!$("#address").val()) {
+			alert("请输入详情地址");
+			$(this).focus();
+		}
+		else{
+			//var requestBody = $('form').serializeObject();
+			var requestBody ={};
+			requestBody.address=$("#address").val();
+			requestBody.city=$("#s_city").val();
+			requestBody.district=$("#s_county").val();
+			requestBody.id=$("#id").val();
+			requestBody.memberId= userId;
+			requestBody.postcode=$("#postcode").val();
+			requestBody.province=$("#s_province").val();
+			requestBody.receiveName=$("#receiveName").val();
+			requestBody.receivePhone=$("#receivePhone").val();
+			requestBody.receiveTime=$("#receiveTime").val();
+			requestBody.siteId= retSiteId;
+			$.postJSON(updateAddressUrl + mid, requestBody, function(response) {
+				loadAddress();
+				changeTab(1);
+			});
+		}
+	}
+	function changeReceiveTime(type) {
+		if (type == 2) {
+			return '送货时间只双休日/节假日送货(工作日不用送)';
+		} else if (type == 3) {
+			return '送货时间只工作​​日送(双休日/节假日不用送)';
+		} else {
+			return '送货时间不限';
+		}
+	}
+
+	function newAddr() {
+		setFormField('', '', '', '', '', '', '', '', 1);
+		changeTab(3);
+	}
+	function editAddress(aj) {
+		//console.log(aj);
+		setFormField(aj.id, aj.receiveName, aj.receivePhone, aj.province, aj.city, aj.district, aj.address, aj.postcode, aj.receiveTime);
+		changeTab(3);
+	}
+	function chooseAddress(aj) {
+		selectedAddr = aj;
+		setSelectedAddr();
+		changeTab(1);
+	}
+	function setSelectedAddr() {
+		$("#selectedReceiveInfo").html(selectedAddr.receiveName + " " + selectedAddr.receivePhone);
+		$("#selectedFullAddr").html(selectedAddr.province + selectedAddr.city + selectedAddr.district + selectedAddr.address);
+		$("#selectedReceiveTime").html(changeReceiveTime(selectedAddr.receiveTime));
+	}
+	function setFormField(id, receiveName, receivePhone, province, city, district, address, postcode, receiveTime) {
+		$("#id").val(id);
+		$("#receiveName").val(receiveName);
+		$("#receivePhone").val(receivePhone);
+		$("#province").val(province);
+		$("#city").val(city);
+		$("#district").val(district);
+		$("#address").val(address);
+		$("#postcode").val(postcode);
+		$("#receiveTime").val(receiveTime);
+	}
+	function changeTab(id) {
+		if (id == 2) {
+			$('#checkPayRow').css('display', 'none');
+			$('#checkAddressRow').css('display', 'block');
+			$('#newAddressRow').css('display', 'none');
+		} else if (id == 3) {
+			$('#checkPayRow').css('display', 'none');
+			$('#checkAddressRow').css('display', 'none');
+			$('#newAddressRow').css('display', 'block');
+		} else {
+			$('#checkPayRow').css('display', 'block');
+			$('#checkAddressRow').css('display', 'none');
+			$('#newAddressRow').css('display', 'none');
+		}
+	}
+	$.fn.serializeObject = function() {
+		var o = {};
+		var a = this.serializeArray();
+		$.each(a, function() {
+			if (o[this.name] !== undefined) {
+				if (!o[this.name].push) {
+					o[this.name] = [o[this.name]];
+				}
+				o[this.name].push(this.value || '');
+			} else {
+				o[this.name] = this.value || '';
+			}
+		});
+		return o;
+	};
+</script>
+<script type="text/javascript">
+	//var Gid  = document.getElementById ;
+	var showArea = function(){
+		document.getElementById('show').innerHTML = "<span>省" + document.getElementById('s_province').value + " - 市" +
+		document.getElementById('s_city').value + " - 县/区" +
+		document.getElementById('s_county').value + "</span>"
+	}
+	document.getElementById('s_county').setAttribute('onchange','showArea()');
+
+</script>
+</body>
+</html>

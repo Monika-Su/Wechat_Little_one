@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<socialClub>
+		<socialChannel>wechat</socialChannel>
+		<publicId>xx</publicId>
+	    <token>OwnTest</token>
+		<appid>xx</appid>
+		<appSecret>xx</appSecret>
+		<mchId>xx</mchId>
+		<share_content>xx</share_content>
+		<please_share>xx</please_share>	
+		<enable_login>true</enable_login>		
+		<checkout_address>The Host address</checkout_address>
+		<shopping_address>The Host address</shopping_address>
+		<user_address>The Host address</user_address>
+		<order_address>The Host address</order_address>
+		<comment_address>The Host address</comment_address>
+	    <commodity_address>The Host address</commodity_address>
+	    <integral_address>The Host address</integral_address>
+	    <personal_center>The Host address</personal_center>
+	    <user_login>The Host address</user_login>
+	    <distribution_customer>The Host address</distribution_customer>
+	    <coupon_address>The Host address</coupon_address>
+	    <detail_address>The Host address</detail_address>
+</socialClub>

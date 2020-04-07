@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no" name="viewport" id="viewport" />
+<title>##title</title>
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+</head>
+<body>
+<!--<div class="container">-->
+	<div class="page">
+		<img  src="images/bg1.jpg">
+		<div class="content">
+			<div class="loginForm">
+				<input type="text" placeholder="手机号码" class="form-control" id="phone" value="" autofocus required >
+				<div class="phoneImage">
+					<img src="images/phone.png" alt="">
+				</div>
+				<span class="success"></span>
+			</div>
+			<div class="loginForm">
+				<input type="text" placeholder="验证码" class="form-control"  name="psw" id="verification" autofocus  required >
+				<button class="btn-default" id="sign_up" onclick="intvel()">获取</button>
+				<div class="verifyImage">
+					<img src="images/code.png" alt="">
+				</div>
+				<span class="verified"></span>
+			</div>
+				<input type="button" class="btn-lg" value="登录" id="login">
+			<div class="line"></div>
+			<div class="text-center memberColor" >还不是会员？</div>
+			<div class="text-center memberColor">
+				<button  class="register" onclick=" normallink()">立即注册</button>
+			</div>
+		</div>
+	</div>
+<!--</div>-->
+<script id="ret-js-template" type="text/javascript"></script>
+<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+<script  type="text/javascript">
+	var retSiteId = "##siteId";
+	var retCert = "##retCert";
+	var retUrlPrefix="##retUrlPrefix";
+	var clubId = "##clubId";
+	(function() {
+		var ret = document.createElement('script');
+		ret.type = 'text/javascript';
+		ret.async = true;
+		ret.src = retUrlPrefix + 'ret.js?' + (new Date().getDate());
+		var currentJs = document.getElementById('ret-js-template');
+		currentJs.parentNode.insertBefore(ret, currentJs);
+	})();
+	var getCookie = function(name){
+		var nameEQ = name + "=";
+		var ca = document.cookie.split(';');
+		for ( var i = 0, limit = ca.length; i < limit; i++) {
+			var c = ca[i];
+			c = c.trim();
+			if (c.indexOf(nameEQ) == 0){
+				return c.substring(nameEQ.length);
+			}
+		}
+		return '';
+	};
+	var extractRootUrl = function (url) {
+		var rootUrl
+		var domain;
+		var matches = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
+		rootUrl = matches && matches[0];
+		domain = matches && matches[1];
+		return rootUrl;
+	};
+	var shouldLoginRetclubFirst = ##enable_login;
+	var dynamicFields = [];
+	var retchatAccount = "##retchat_id";
+	var appid = "##appid";
+	var WECHAT_PUBLIC_OPENID_COOKIE = appid + "__wopenid";
+	var mid = getCookie(retchatAccount);
+	var isLogin = getCookie( "isLogin" + retchatAccount );
+	var userId = null;
+	var urlMember = extractRootUrl( retUrlPrefix ) + "agent/wechat/getRetclubMemberInfo?siteId=" + retSiteId + "&accountName=";
+	$("#phone").change(function(){
+			if($("#phone").val()==""){
+				$("#login").css("opacity","0.1");
+				$("#login").attr("disabled",true);
+			}
+	});
+	$("#verification").change(function () {
+			if($("#verification").val()==""){
+				$("#login").css("opacity","0.1");
+				$("#login").attr("disabled",true);
+			}
+	});
+	function verify() {
+		if ($("#phone").val().trim() == '') {
+			alert('请输入手机号码');
+			$("#phone").focus();
+			return;
+		}
+		if($("#verification").val().trim()==''){
+			alert('请输入验证码');
+			$(this).focus();
+			return;
+		}
+	}
+	function  normallink(){
+		window.location="##user_address";
+	};
+	var timer=null;
+	function intvel() {
+		var reg=/^1[34578]\d{9}$/;
+		if($("#phone").val().trim() == ''){
+			alert("请输入手机号码")
+			$(this).focus();
+		}
+		else if(!reg.test($("#phone").val())){
+               alert("手机号码格式输入有误");
+				$(this).focus();
+		}
+		else{
+				clearInterval(timer);
+				var time = 60;
+				timer = setInterval(function () {
+					if (time <= 0) {
+						$("#sign_up").text("重新发送");
+						$("#sign_up").attr("disabled", false)
+					} else {
+						$("#sign_up").attr("disabled", true);
+						$("#sign_up").text("剩余" + (time) + "秒");
+						time--;
+					}
+				}, 1000);
+				var phone = $("#phone").val();
+				$.getJSON(extractRootUrl(retUrlPrefix) +"agent/wechat/getValidCodeByPhone?siteId="+retSiteId+"&phoneNumber="+phone  , function(response) {
+					var data=response.data;
+					if(data==true){
+						alert("验证码发送成功");
+						$("#login").css("opacity","1");
+						$("#login").removeAttr("disabled");
+					}
+					else{
+						alert("验证码发送失败,手机号码未注册");
+						clearInterval(timer);
+					}
+				})
+		}
+	}
+	$(function () {
+		if(($("#phone").val()=="")||($("#verification").val()=="")){
+			$("#login").css("opacity","0.1");
+			$("#login").attr("disabled",true);
+		}
+		$("#login").click(function(){
+				if(($("#phone").val()=="")||($("#verification").val()=="")){
+					verify();
+					return;
+				}
+				else{
+					var code=$("#verification").val();
+					var phone=$("#phone").val();
+					$.getJSON(extractRootUrl(retUrlPrefix) + "agent/wechat/smsValid?siteId=" + retSiteId + "&phoneNumber=" + phone + "&validCode=" + code, function (response) {
+									var data = response.data;
+									if (data==null ) {
+									alert("用户数据为空，请重新注册");
+									//window.location = "##commodity_address";
+								  }
+									else {
+										var retUid=response.data.retUid;
+										var accountName=response.data.retchatAccount;
+										var opneId=response.data.opneId;
+										RET.cookieObj.setLocalCookie( "_retfs" ,  opneId, 3650 );
+										RET.cookieObj.setLocalCookie( "_retUid" ,  retUid, 3650 );
+										RET.cookieObj.setLocalCookie( retchatAccount, encodeURIComponent(accountName), 3650 );
+										RET.cookieObj.setLocalCookie("isLogin" + retchatAccount, 1, 3650);
+										alert("登录成功");
+										window.location="##personal_center";
+									}
+							    });
+				}
+		})
+	});
+	function validatePhone(phone) {
+		var reg = /\D+/g;
+		return reg.test(phone);
+	}
+</script>
+</body>
+</html>

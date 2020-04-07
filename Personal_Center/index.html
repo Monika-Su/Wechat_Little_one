@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	 <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	 <meta name="viewport" content="width=device-width, initial-scale=1">
+	 <title>##title</title>
+	 <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	 <link rel="stylesheet" type="text/css" href="css/retclub.css">
+</head>
+<body>
+	<div class="container-fluid" onclick="gotoPersonalInfo()">
+		<div class="col-md-12 col-xs-12" align="center">
+			<div class="outter" >
+				<div class="circle">
+					<img src="" id="pointIcon"  />
+				</div>
+				<div class="account-info">
+					<label id="label_account"></label>
+					<div class="club">LITTLE&nbsp;ONE&nbsp;微会员</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="top-info">
+		<button class="btn" onclick="returnCommodity()">返回商城</button>
+	</div>
+	 <div class="list">
+		 <!--<div class="list2">-->
+			 <div class="list3">
+				 <div class="col-lg-12 col-md-12 col-xs-12">
+					 <div class="col-lg-6 col-md-6 col-xs-6">
+						 <a href="##order_address">
+							 <div class="order_link">
+									 <img class="personImage" src="images/order.png" alt="">
+								 <div class="myorder">我的订单</div>
+							 </div>
+						 </a>
+					 </div>
+					 <div class="col-lg-6 col-md-6 col-xs-6 ">
+						 <a href="##integral_address">
+							 <div class="integral_link">
+								 <img class="personImage" src="images/member.png" alt="">
+								 <div class="myorder">
+									<span>我的积分</span>
+									<span class="point_label" id="total_point"></span>
+								 </div>
+							 </div>
+						 </a>
+					 </div>
+				 </div>
+				 <div class="col-lg-12 col-md-12 col-xs-12">
+					 <div class="col-lg-6 col-md-6 col-xs-6">
+						 <a href="##coupon_address">
+							 <div class="coupon_link">
+								 <img  class="personImage" src="images/coupon.png" alt="">
+								 <div class="myorder">
+									 <span>我的优惠券</span>
+									 <span class="coupon_label" id="coupon"></span>
+								 </div>
+							 </div>
+						 </a>
+					 </div>
+					 <div class="col-lg-6 col-md-6 col-xs-6 ">
+						 <a href="##coupon_address">
+							 <div class="voucher_link">
+								 <img class="personImage" src="images/normal.png" alt="">
+								 <div class="myorder">
+									 <span>我的代金券</span>
+									 <span class="coupon_label" id="voucher"></span>
+								 </div>
+							 </div>
+						 </a>
+					 </div>
+				 </div>
+			 </div>
+		 <!--</div>-->
+	 </div>
+	<div class="top-info" style="line-height: 42px;">
+		<label class="col-lg-8 col-md-8 col-xs-8" style="line-height: 50px;padding:0">15303839308</label>
+		<div class="btn" style="margin-top: -7px; margin-left: 10%;">客服电话</div>
+	</div>
+<script src="js/jquery-1.11.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+
+<script type="text/javascript" src="js/i18next-1.7.4.min.js"></script>
+<script type="text/javascript" src="js/i18nSetting.js"></script>
+<!-- <script type="text/javascript" src="##retchat_js?v=3"></script> -->
+<script id="ret-js-template" type="text/javascript"></script>
+<script>
+	var retUrlPrefix="##retUrlPrefix";
+	var retSiteId = "##siteId";
+	var retCert = "##retCert";
+	var clubId = "##clubId";
+	var shouldLoginRetclubFirst = "##enable_login";
+	(function() {
+		var ret = document.createElement('script');
+		ret.type = 'text/javascript';
+		ret.async = true;
+		ret.src = retUrlPrefix + 'ret.js?' + (new Date().getDate());
+		var currentJs = document.getElementById('ret-js-template');
+		currentJs.parentNode.insertBefore(ret, currentJs);
+		if(isLogin == "1") {
+			$(".drawDate").css('display','block')
+			return;
+		}
+	})();
+	var getCookie = function(name){
+		var nameEQ = name + "=";
+		var ca = document.cookie.split(';');
+		for ( var i = 0, limit = ca.length; i < limit; i++) {
+			var c = ca[i];
+			c = c.trim();
+			if (c.indexOf(nameEQ) == 0){
+				return c.substring(nameEQ.length);
+			}
+		}
+		return '';
+	};
+		
+	var extractRootUrl = function (url) {
+		var rootUrl
+		var domain;
+		var matches = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);		
+		rootUrl = matches && matches[0];
+		domain = matches && matches[1];
+		return rootUrl;
+	};
+	var retchatAccount = "##retchat_id";
+	var appid = "##appid";
+	var WECHAT_PUBLIC_OPENID_COOKIE = appid + "__wopenid";
+	//var host = "http://##retchat_server";
+	//var orderLists = host + "/ipcrm-manager/api/ipcrm/order/list?siteId=" + siteId + "&month=-3&memberStr=";
+	//var orderItems = host + "/ipcrm-manager/api/ipcrm/order/orderItems?orderId=";
+	var host = extractRootUrl( retUrlPrefix ); //"http://##retchat_server";
+	var orderListsUrl = host + "agent/wechatOrder/getOrderList?siteId=" + retSiteId + "&memberId=";
+	//var dataUrl = host + "/ipcrm-manager/api/ipcrm/public/point?siteId=" + siteId + "&member=";
+	var urlMember = extractRootUrl( retUrlPrefix ) + "agent/wechat/getRetclubMemberInfo?siteId=" + retSiteId + "&accountName=";
+	var mid = getCookie(retchatAccount);
+	var userId = null;
+	var isLogin = getCookie( "isLogin" + retchatAccount );
+	if( typeof(mid) != "undefined" && mid.length > 0 ) {
+		jQuery.ajax({
+			url: urlMember + mid,
+			success: function (resp) {
+				userId = resp.data.memberId;
+			},
+			async: false
+		});
+	}
+	var couponCountURL=extractRootUrl( retUrlPrefix )+"agent/wechatOrder/list/memberCoupons?siteId="+ retSiteId +"&memberId="+userId;
+	if( typeof(mid) != "undefined" && mid.length > 0 ) {
+		$.ajax({
+			url: urlMember + mid,
+			cache: false,
+			type: "GET",
+			dataType: "json",
+			success: function( resp ) {
+				$("#total_point").text( resp.data.availablePoints+"分");
+				if( !resp.data )
+					return;
+				if( resp.data.phoneNumber )
+					$("#label_phone").text( resp.data.phoneNumber );
+				if( resp.data.name )
+					$("#label_account").text( resp.data.name );
+				else
+					$("#label_account").text( resp.data.accountName );
+				
+				if( resp.data.headimgurl )
+					$('#pointIcon').attr( 'src', resp.data.headimgurl );
+				else
+					$('#pointIcon').attr( 'src', 'images/points.png' );
+				
+				if( ! resp.data.memberEnable ){
+					$('#memberInActive').show();
+					$('#memberActive').hide();
+				}
+			},
+			error: function(a) {}
+		});
+		$.get(couponCountURL,function(resp){
+			var getCouponList=resp.data;
+			if(getCouponList.length==0){
+                 $("#voucher").text(0+"个");
+			}
+			else{
+				$.each(getCouponList,function(index,item){
+					if(item.isUsed==false){
+						$("#voucher").text(getCouponList.length+"个");
+					}
+					else{
+						$("#voucher").text(0+"个");
+					}
+				})
+			}
+		})
+	}
+	loadOrder();
+	function loadOrder() {
+		$("#itemList").html('');
+		$.ajaxSetup({
+			cache: false
+		});
+		if( userId==null || userId.length>0 )
+			return;
+	}
+	function comment(){
+		window.location="##comment_address"
+	}
+	function shopping(){
+		window.location="##shopping_address";
+	}
+	$("#closeDetail").click(function() {
+		$("#orderList").css('display', 'block');
+		$("#next").css('display', 'none');
+		$(".container-fluid").show();
+	});
+	function timestampToString(timestamp) {
+		if (timestamp) {
+			var dt = new Date(timestamp);
+			var year = dt.getFullYear();
+			var month = dt.getMonth() + 1;
+			var day = dt.getDate();
+			if (month < 10)
+				month = '0' + month;
+			if (day < 10)
+				day = '0' + day;
+			var hour = dt.getHours();
+			if (hour < 10)
+				hour = '0' + hour;
+			var min = dt.getMinutes();
+			if (min < 10)
+				min = '0' + min;
+	
+			return year + "-" + month + "-" + day + " " + hour + ":" + min;
+		} 
+		else {
+			return "";
+		}
+	}
+	function getParameterByName(name) {
+		name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+		var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+		results = regex.exec(location.search);
+		return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+	}
+	
+	function isInt(n){
+		return Number(n) === n && n % 1 === 0;
+	}
+
+	function isFloat(n){
+		return Number(n) === n && n % 1 !== 0;
+	}
+	function register() {
+		if(isLogin == "1") {
+			window.location ="##shopping_address";
+			return;
+		}
+		if (isLogin == "0") {
+			window.location = "##user_address";
+			return;
+		}
+		$.get(loginUrl + mid, function(resp) {
+			var isMemberExisted = resp.data;
+			if ( ! isMemberExisted ) {
+				RET.cookieObj.setLocalCookie( "isLogin" + retchatAccount, 0, 3650 );
+				window.location = "##user_address";
+			}
+			else{
+				isLogin = "1";
+				window.location ="##shopping_address";
+			}
+		});
+	}
+	function returnCommodity() {
+		window.location="##commodity_address";
+	}
+</script>
+</body>
+
+</html>
+

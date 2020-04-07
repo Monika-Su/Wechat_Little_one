@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>##title</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="css/points.css">
+	<link rel="stylesheet" type="text/css" href="css/retclub.css">
+</head>
+<style>
+	.container-fluid{
+		background: url("images/background.jpg") no-repeat;
+		height: 150px;
+		background-size: 100%;
+	}
+</style>
+<div>
+<div class="container-fluid" >
+	<div class="col-md-12 col-xs-12" align="center">
+		<!--<div class="outter" >-->
+			<!--<img src="images/background.jpg" alt=""/>-->
+		<!--</div>-->
+		<div  class="username">
+			<div class="circleImg" onclick="gotoPersonalInfo()">
+				<img src="" id="pointIcon"/>
+				<label id="label_account"></label>
+			</div>
+		</div>
+	</div>
+	<div class="control" align="center">
+		<div class="btn btn-primary col-lg-6 col-xs-6 col-md-6 text-left" >
+			累积<label class="point_label" id="total_point">0</label>积分
+		</div>
+		<div class="btn btn-primary col-lg-6 col-xs-6 col-md-6 text-right">
+			可用<label class="point_label" id="remind_point">0</label>积分
+		</div>
+	</div>
+</div>
+<!--<div class="caption">抵扣记录</div>-->
+<!--<div class="tab-content">-->
+			<!--<div class="col-lg-12 col-md-12 col-xs-12">-->
+				<!--<div class="container">-->
+					<!--<div class="row order-detail" id="exchangeList">-->
+					<!--</div>-->
+				<!--</div>-->
+			<!--</div>-->
+<!--</div>-->
+<div class="caption">
+	<ul class="nav nav-tabs" id="tab">
+		<li data-toggle="tab" class="col-md-6 col-sm-6 col-xs-6 active" >
+			<a href="#IntegralRule">积分规则</a>
+		</li>
+		<li data-toggle="tab" class="col-md-6 col-sm-6 col-xs-6" >
+			<a href="#record" style="border-left:1px solid #dcdcdc" >抵扣记录</a></li>
+	</ul>
+</div>
+<div class="tab-content">
+	<div class="tab-pane active" id="IntegralRule">
+		<div class="col-lg-12 col-md-12 col-xs-12">
+				<div class="order-detail" id="itemList">
+					<div class="mainTitle">积分累计：</div>
+					<p class="mainDetailCaption">1、购物获得相应数量的积分，累计比例1:1。</p>
+					<div class="mainTitle">积分使用：</div>
+					<p class="mainDetailCaption">1、结算时使用，抵扣比例参照购物车抵扣百分比。</p>
+				</div>
+			</div>
+		</div>
+	<div class=" tab-pane" id="record">
+		<div class="col-lg-12 col-md-12 col-xs-12">
+			<div class="container">
+				<div class="row order-detail" id="exchangeList">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+	<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/i18next-1.7.4.min.js"></script>
+	<script type="text/javascript" src="js/i18nSetting.js"></script>
+	<!-- <script type="text/javascript" src="##retchat_js?v=3"></script> -->
+	<script id="ret-js-template" type="text/javascript"></script>
+  <script>
+	$("#tab a").click(function (e) {
+		e.preventDefault();
+		$(this).tab('show')
+	});
+  </script>
+     <script>
+	var retUrlPrefix="##retUrlPrefix";
+	var retSiteId = "##siteId";
+	var retCert = "##retCert";
+	var clubId = "##clubId";
+	var shouldLoginRetclubFirst = "##enable_login";
+	(function() {
+		var ret = document.createElement('script');
+		ret.type = 'text/javascript';
+		ret.async = true;
+		ret.src = retUrlPrefix + 'ret.js?' + (new Date().getDate());
+		var currentJs = document.getElementById('ret-js-template');
+		currentJs.parentNode.insertBefore(ret, currentJs);
+	})();
+	var getCookie = function(name){
+		var nameEQ = name + "=";
+		var ca = document.cookie.split(';');
+		for ( var i = 0, limit = ca.length; i < limit; i++) {
+			var c = ca[i];
+			c = c.trim();
+			if (c.indexOf(nameEQ) == 0){
+				return c.substring(nameEQ.length);
+			}
+		}
+		return '';
+	};
+	var extractRootUrl = function (url) {
+		var rootUrl
+		var domain;
+		var matches = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
+		rootUrl = matches && matches[0];
+		domain = matches && matches[1];
+		return rootUrl;
+	};
+	var retchatAccount = "##retchat_id";
+	var appid = "##appid";
+	var WECHAT_PUBLIC_OPENID_COOKIE = appid + "__wopenid";
+	var host = extractRootUrl( retUrlPrefix ); //"http://##retchat_server";
+	var orderListsUrl = host + "agent/wechatOrder/getOrderList?siteId=" + retSiteId + "&memberId=";
+	//var listItemByCodeUrl = "agent/wechatOrder/list/itemsByCode?siteId=" + retSiteId + '&itemCodeList='+clubId;
+	var urlMember = extractRootUrl( retUrlPrefix ) + "agent/wechat/getRetclubMemberInfo?siteId=" + retSiteId + "&accountName=";
+	var urlRedeem = extractRootUrl( retUrlPrefix ) + "agent/wechatOrder/redeem?siteId=" + retSiteId + "&orderChannel=WECHAT&memberId=";
+	var mid = getCookie(retchatAccount);
+	var userId = null;
+	var points = 0;
+	var memberEnable = true;
+	var exchangeMax = 3000;
+	$.ajax({
+			url: urlMember + mid,
+			cache: false,
+			type: "GET",
+			dataType: "json",
+			success: function( resp ) {
+				userId = resp.data.memberId;
+				console.log(userId);
+				loadOrder(userId);
+				if( !resp.data )
+					return;
+				if( resp.data.allPoints ){
+					$("#total_point").text( resp.data.allPoints );
+				}
+				if( resp.data.availablePoints ) {
+					$( "#remind_point" ).text( resp.data.availablePoints );
+					//$("#total_point").text(jsPoint.totalPoint);
+				}
+				if( resp.data.phoneNumber )
+					$("#label_phone").text( resp.data.phoneNumber );
+				if( resp.data.name )
+					$("#label_account").text( resp.data.name );
+				else
+					$("#label_account").text( resp.data.accountName );
+
+				if( resp.data.headimgurl )
+					$('#pointIcon').attr( 'src', resp.data.headimgurl );
+				else
+					$('#pointIcon').attr( 'src', 'images/points.png' );
+
+				if( ! resp.data.memberEnable ){
+					$('#memberInActive').show();
+					$('#memberActive').hide();
+				}
+			},
+			error: function(a) {}
+		});
+	function gotoPersonalInfo(){
+		window.location.href = '##personal_info';
+	}
+	function loadOrder(userId) {
+			$.get( orderListsUrl + userId, function(resp) {
+				var respData = resp.data;
+				var reduceScore=0;
+				if( respData.content.length > 0 ) {
+					$.each(respData.content, function (i,list) {
+						var orderList=list.orderItems;
+						var total=list.discountTotal;
+						var order=list.orderDate;
+						if(list.usedPoints>0){
+							$.each(orderList,function(i){
+								JSON.stringify(orderList);
+								var listName= orderList[i].name;
+								var exchangeContent = '<ul class="list-group">';
+								exchangeContent += '<li class="list-group-item" >';
+								exchangeContent += "<div class='integral'>" + "-" +list.usedPoints + "积分" + "</div>";
+								exchangeContent += '<div class="itemName">'
+								exchangeContent += '<div>' + timestampToString(order)+ '</div>';
+								exchangeContent+='<span class="itemPrice">'+ listName+'</span>';
+								exchangeContent += '<div class="itemPrice" style="float:right; text-align:right">'+'消费: ' + total + '</div>';
+								exchangeContent += "</div>";
+								exchangeContent += '</li>';
+								exchangeContent += '</ul>';
+								$("#exchangeList").append(exchangeContent);
+							});
+						}
+						else{
+							$("#exchangeList").html('');
+						}
+					});
+				}
+			})
+	}
+	function getOrderDetail( orderItemList ) {
+		loadOrderItem( orderItemList );
+		$("#orderList").css('display', 'none');
+		$("#next").css('display', 'block');
+		$(".container-fluid").hide();
+	}
+	function comment(){
+		window.location="##comment_address"
+	}
+	function shopping(){
+		window.location="##shopping_address";
+	}
+	$("#closeDetail").click(function() {
+		$("#orderList").css('display', 'block');
+		$("#next").css('display', 'none');
+		$(".container-fluid").show();
+	});
+	function timestampToString(timestamp) {
+		if (timestamp) {
+			var dt = new Date(timestamp);
+			var year = dt.getFullYear();
+			var month = dt.getMonth() + 1;
+			var day = dt.getDate();
+			if (month < 10)
+				month = '0' + month;
+			if (day < 10)
+				day = '0' + day;
+			var hour = dt.getHours();
+			if (hour < 10)
+				hour = '0' + hour;
+			var min = dt.getMinutes();
+			if (min < 10)
+				min = '0' + min;
+
+			return year + "-" + month + "-" + day + " " + hour + ":" + min;
+		}
+		else {
+			return "";
+		}
+	}
+
+	function getParameterByName(name) {
+		name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+		var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+				results = regex.exec(location.search);
+		return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+	}
+
+	function isInt(n){
+		return Number(n) === n && n % 1 === 0;
+	}
+
+	function isFloat(n){
+		return Number(n) === n && n % 1 !== 0;
+	}
+
+</script>
+</body>
+
+</html>

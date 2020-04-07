@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<title>##title</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<!--[if lt IE 9]>
+		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+		<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+</head>
+<body>
+	<div class="bannerImage">
+	  <img src="images/1.jpg" alt="" style="width:100%">
+	</div>
+	<div class="tab-content">
+	    <!--<div class=" tab-pane active " id="news1">-->
+		<a href="https://mp.weixin.qq.com/s/EWVaDaZn-ZNSj6NPz6W2Rg">
+	      <div class="thumb col-lg-12 col-md-12 col-xs-12">
+				 <div class="media media-left col-lg-4 col-md-4 col-xs-5">
+					<img src="images/new2.jpg" class="img-responsive" />
+				 </div>
+				  <div class="col-lg-8 col-md-8 col-xs-7">
+				  <h4>宝宝辅食添加手册</h4>
+					<p>宝宝的营养摄入满足生长发育需要</p>
+				 </div>
+		  </div>
+		 </a>
+		 <a href="https://mp.weixin.qq.com/s/VnAU-8utDx3HKYfu0kThzw">
+		  <div class="thumb col-lg-12 col-md-12 col-xs-12">
+				 <div class="media media-left col-lg-4 col-md-4 col-xs-5">
+					<img src="images/new3.jpg" class="img-responsive" />
+				 </div>
+				  <div class="col-lg-8 col-md-8 col-xs-7">
+				  <h4>关于奶粉溶解的事情</h4>
+					<p>作为妈妈不知道就OUT啦！</p>
+				 </div>
+		  </div>
+		 </a>
+		  <a href="https://mp.weixin.qq.com/s/0UcFFnuiFpf2TnzwhCpAZw">
+		  <div class="thumb col-lg-12 col-md-12 col-xs-12">
+				 <div class="media media-left col-lg-4 col-md-4 col-xs-5">
+					<img src="images/new4.jpg" class="img-responsive" />
+				 </div>
+				  <div class="col-lg-8 col-md-8 col-xs-7">
+				  <h4>再挑食的孩子都能好好吃饭</h4>
+					<p>挑食偏食的解决办法（纯干货）</p>
+				 </div>
+		  </div>
+		  </a>
+		 <a href="https://mp.weixin.qq.com/s/tdVIb808B-4U2977_-UFOg">
+			<div class="thumb col-lg-12 col-md-12 col-xs-12">
+				 <div class="media media-left col-lg-4 col-md-4 col-xs-5">
+					<img src="images/new1.jpg" class="img-responsive" />
+				 </div>
+				  <div class="col-lg-8 col-md-8 col-xs-7">
+				  <h4>奶粉这样喂</h4>
+					<p>让宝宝不上火&nbsp;宝</p>
+				 </div>
+		    </div>
+		</a>
+		<a href="https://mp.weixin.qq.com/s/pFyJyH3P7clGHn7w2oF_0w">
+			<div class="thumb col-lg-12 col-md-12 col-xs-12">
+				 <div class="media media-left col-lg-4 col-md-4 col-xs-5">
+					<img src="images/new5.jpg" class="img-responsive" />
+				 </div>
+				  <div class="col-lg-8 col-md-8 col-xs-7">
+				  <h4>冬季带宝宝晒太阳的姿势</h4>
+					<p>这样有助于宝宝的健康成长</p>
+				 </div>
+		    </div>
+		</a>
+	</div>
+	<!-- /.container -->
+	<script src="js/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/carousel.js"></script>
+	<script id="ret-js-template" type="text/javascript"></script>
+	<!-- <script type="text/javascript" src="##retchat_js?v=3"></script> -->
+	<script>
+	var retchatAccount = "##retchat_id";
+	var appid = "##appid";
+	var WECHAT_PUBLIC_OPENID_COOKIE = appid + "__wopenid";
+	var mchId="##mchId";
+	var clubId = "##clubId";
+	var host = extractRootUrl( retUrlPrefix ); //"http://##retchat_server";
+	//var dataUrl = host + "http://##retchat_server/ipcrm-manager/api/ipcrm/public/point?siteId=" + retSiteId + "&member=";
+	var urlMember = host + "agent/wechat/getRetclubMemberInfo?siteId=" + retSiteId + "&accountName=";
+	var loadQrcodeUrl = host + "agent/wechat/loadQRCode?clubId=##clubId&accountName=";
+	var ua = navigator.userAgent.toLowerCase();
+	var ticket = getParameterByName("ticket");
+	var mid = getCookie(retchatAccount);
+	var retUrlPrefix="##retUrlPrefix";
+	var retSiteId = "##siteId";
+	var retCert = "##retCert";
+	var shouldLoginRetclubFirst ="##enable_login";
+	(function() {
+		var ret = document.createElement('script');
+		ret.type = 'text/javascript';
+		ret.async = true;
+		ret.src = retUrlPrefix + 'ret.js?' + (new Date().getDate());
+		var currentJs = document.getElementById('ret-js-template');
+		currentJs.parentNode.insertBefore(ret, currentJs);
+	})();
+	var getCookie = function(name){
+		var nameEQ = name + "=";
+		var ca = document.cookie.split(';');
+		for ( var i = 0, limit = ca.length; i < limit; i++) {
+			var c = ca[i];
+			c = c.trim();
+			if (c.indexOf(nameEQ) == 0){
+				return c.substring(nameEQ.length);
+			}
+		}
+		return '';
+	};
+	var extractRootUrl = function (url) {
+		var rootUrl
+		var domain;
+		var matches = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
+		rootUrl = matches && matches[0];
+		domain = matches && matches[1];
+		return rootUrl;
+	};
+	</script>
+</body>
+</html>
+

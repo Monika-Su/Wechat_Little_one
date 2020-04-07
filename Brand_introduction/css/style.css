@@ -1,0 +1,39 @@
+@charset "utf-8";
+* { 
+	margin: 0; 
+	padding: 0; 
+}
+html, body {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	font-size:16px;
+	font-family: "微软雅黑";
+	font-weight: 800;
+}
+.container {
+	width: 100%;
+	height: 100%;
+  }
+.container .page {
+	height: 100%;
+}
+.page>img{
+	 width:100%;
+	 height: 100%;
+ }
+.content{
+	position: absolute;
+	top:42%;
+	color:#1E2F63;;
+	padding-top:10px;
+	left:18%;
+
+}
+p:first-child{
+	padding-left:40px;
+}
+p{
+	margin-top:8px;
+	/*display: none;*/
+}

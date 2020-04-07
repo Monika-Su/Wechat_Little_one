@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta charset="UTF-8">
+	<meta content="yes" name="apple-mobile-web-app-capable">
+	<meta content="yes" name="apple-touch-fullscreen">
+	<meta content="telephone=no" name="format-detection">
+	<meta content="black" name="apple-mobile-web-app-status-bar-style">
+	<meta name="viewport" content="width=640, target-densitydpi=320, user-scalable=0">
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/retclub.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<title>##title</title>
+	<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+	<style>
+		.userHeader {
+			background: url(images/background.jpg) no-repeat;
+			background-size: 100%;
+			height:300px;
+			margin-top:-20px;
+		}
+		span{
+		 color:red;
+		 font-weight:bold;
+		}
+	</style>
+</head>
+<body class="">
+	<div class="wrapper">
+			<!-- Default panel contents -->
+		<div class="userHeader">
+			<div class="personTitle">
+				<h2 id="formTitle"></h2>
+			</div>
+		</div>
+		<form class="form-container" id="form">
+			<div class="input-inset col-lg-12 col-md-12 col-xs-12">
+				<label class="col-lg-3 col-md-3 col-xs-3">会员名</label>
+				<input type="text" class="form-control col-lg-7 col-md-7 col-xs-7" name="name" id="name"
+					   autofocus  pattern="^[a-zA-Z0-9_\u4e00-\u9fa5]{2,16}$" required>
+				<span class=" col-lg-2 col-md-2 col-xs-2 mandatory ">*必填*</span>
+			</div>
+			<div class="username text-center"></div>
+			<div class="input-inset col-lg-12 col-md-12 col-xs-12">
+				<label class="col-lg-3 col-md-3 col-xs-3">性别</label>
+				<div class="col-lg-4 col-md-4 col-xs-4">
+					<input type="radio" name="gender" id="genderMale" value="M" style="width:20px !important;height:20px!important;" checked>
+					<label for="genderMale"></label>
+				</div>
+				<div class="col-lg-4 col-md-4 col-xs-4">
+					<input type="radio" name="gender" id="genderFemale" value="F" style="width:20px !important;height:20px!important;">
+					<label for="genderFemale"></label>
+				</div>
+			</div>
+			<div class="input-inset col-lg-12 col-md-12 col-xs-12">
+				<label class="col-lg-3 col-md-3 col-xs-3">手机</label>
+				<input type="text" class="form-control col-lg-7 col-md-7 col-xs-7" name="phone" id="phone" maxlength="15"  required pattern="^1[3-9]\d{9}$">
+				<span class=" col-lg-2 col-md-2 col-xs-2 mandatory ">*必填*</span>
+			</div>
+			<div class="phoneNumber text-center"></div>
+			<div class="input-inset col-lg-12 col-md-12 col-xs-12">
+			<label class="col-lg-3 col-md-3 col-xs-3">验证码</label>
+			<input type="text" class="form-control col-lg-6 col-md-6 col-xs-6" style="padding: 12px 0;"
+					name="psw" id="verification" autofocus  required pattern="^[0-9]\d$" >
+			<input class="btn-default col-lg-3 col-md-3 col-xs-3"  value="获取" type="button" id="signUp">
+			</div>
+			<!--pattern="^[0-9]{6}$"-->
+			<div class="promptInformation  text-center"></div>
+			<div class="input-inset col-lg-12 col-md-12 col-xs-12">
+				<label class="col-lg-3 col-md-3 col-xs-3">邮箱</label>
+				<input type="email" class="form-control col-lg-7 col-md-7 col-xs-7" name="email" id="email" maxlength="100" required
+				pattern="^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$">
+			</div>
+			<div class="emailAdderss text-center"></div>
+			<div class="form-title" id="accountLabel"></div>
+				<input class="form-field" type="hidden" name="account" id="account" data-i18n="[placeholder]checkout.member.account]"	>
+			<div id="dynamicFields"></div>
+			<!-- selector -->
+			<div class="info col-lg-12 col-md-12 col-xs-12">
+			<label class="region col-lg-3 col-md-3 col-xs-3">地区</label>
+				<div class="select_margin col-lg-9 col-md-9 col-xs-9">
+				<select id="s_province" name="s_province" class="col-lg-4 col-xs-4 col-md-4 input-inset" style="margin-bottom: -1px;"></select>
+				<select id="s_city" name="s_city" class="col-lg-4 col-xs-4 col-md-4 input-inset" style="margin-bottom: -1px;"></select>
+				<select id="s_county" name="s_county" class="col-lg-4 col-xs-4 col-md-4 input-inset" style="margin-bottom: 30px;"></select>
+				</div>
+				<div id="show"></div>
+			</div>
+			<div class="submit-container">
+				<input class="submit-button" type="button" id="submitButton" value="注册" onclick="register()" />
+			</div>
+		</form>
+		<div id="registerSuccess">
+			<div class="registerSuccessTotal">注册成功!</div>
+			<a href="##coupon_address">
+				<div class="getCoupon"><img src="images/coupon.png" style="padding:0 10px">去抢优惠券</div>
+			</a>
+			<a href="##commodity_address">
+				<div class="getCoupon"><img src="images/shopping.png" style="padding:0 10px">逛逛商城</div>
+			</a>
+		</div>
+	</div>
+	<!-- <script type="text/javascript" src="##retchat_js?v=3"></script> -->
+	<script id="ret-js-template" type="text/javascript"></script>
+	<script type="text/javascript" src="js/i18next-1.7.4.min.js"></script>
+	<script type="text/javascript" src="js/i18nSetting.js"></script>
+	<script class="resources library" src="js/area.js" type="text/javascript"></script>
+	<script type="text/javascript">_init_area();</script>
+	<script type="text/javascript">
+		$(function () {
+			$("#name").blur(function () {
+				if (this.validity.valid) {
+					$(".username").text("√");
+					$(".username").css({
+						"padding": "12px",
+						"color": "green",
+						'text-align': 'right'
+					});
+				} else if (this.validity.patternMismatch) {
+					$(".username").text("*只允许输入2-16位数字、字母、汉字及下划线*");
+					$(".username").css({
+						"padding": "12px",
+						"color": "red"
+					})
+				} else if (this.validity.valueMissing) {
+					$(".username").text("*用户名不能为空*");
+					$(".username").css({
+						"padding": "12px",
+						"color": "red"
+					})
+				}
+			});
+			$("#phone").blur(function () {
+				if (this.validity.valid) {
+					$(".phoneNumber").text("√");
+					$(".phoneNumber").css({
+						"padding": "12px",
+						"color": "green",
+						'text-align': 'right'
+					});
+				}
+				else if (this.validity.patternMismatch) {
+					$(".phoneNumber").text("*请输入正确的手机号码*");
+					$(".phoneNumber").css({
+						"padding": "12px",
+						"color": "red"
+					})
+				}
+				else if (this.validity.valueMissing) {
+					$(".phoneNumber").text("*电话不能为空*");
+					$(".phoneNumber").css({
+						"padding": "12px",
+						"color": "red"
+					})
+				}
+			});
+			$("#verification").blur(function () {
+				if (this.validity.valid) {
+					$(".promptInformation").text("√");
+					$(".promptInformation").css({
+						"padding": "12px",
+						"color": "green",
+						'text-align': 'right'
+					});
+				}
+				else if (this.validity.patternMismatch) {
+					$(".promptInformation").text("*验证码输入有误*");
+					$(".promptInformation").css({
+						"padding": "12px",
+						"color": "red"
+					})
+				}
+				else if (this.validity.valueMissing) {
+					$(".promptInformation").text("*验证码不能为空*");
+					$(".promptInformation").css({
+						"padding": "12px",
+						"color": "red"
+					})
+				}
+			})
+		})
+	</script>
+	<script type="text/javascript">
+		var retUrlPrefix="##retUrlPrefix";
+		var retCert = "##retCert";
+		var retSiteId = "##siteId";
+		var clubId = "##clubId";
+		var shouldLoginRetclubFirst = "##enable_login";
+		(function() {
+			var ret = document.createElement('script');
+			ret.type = 'text/javascript';
+			ret.async = true;
+			ret.src = retUrlPrefix + 'ret.js?' + (new Date().getDate());
+			var currentJs = document.getElementById('ret-js-template');
+			currentJs.parentNode.insertBefore(ret, currentJs);
+		})();
+		var getCookie = function(name){
+			var nameEQ = name + "=";
+			var ca = document.cookie.split(';');
+			for ( var i = 0, limit = ca.length; i < limit; i++) {
+				var c = ca[i];
+				c = c.trim();
+				if (c.indexOf(nameEQ) == 0){
+					return c.substring(nameEQ.length);
+				}
+			}
+			return '';
+		};
+		var extractRootUrl = function (url) {
+			var rootUrl
+			var domain;
+			var matches = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
+			rootUrl = matches && matches[0];
+			domain = matches && matches[1];
+			return rootUrl;
+		};
+		var dynamicFields = [];
+		var retchatAccount = "##retchat_id";
+		var appid = "##appid";
+		var mid = getCookie(retchatAccount);
+		var isLogin = getCookie( "isLogin" + retchatAccount );
+		var WECHAT_PUBLIC_OPENID_COOKIE = appid + "__wopenid";
+		var userId = null;
+		var urlMember = extractRootUrl( retUrlPrefix ) + "agent/wechat/getRetclubMemberInfo?siteId=" + retSiteId + "&accountName=";
+		var regUrl = extractRootUrl(retUrlPrefix) + 'agent/wechat/register/' + retSiteId;
+		$(function() {
+			$("#formTitle").text('完善个人资料');
+			$("#phone").i18n();
+			$("#name").i18n();
+			$("#account").i18n();
+			$("#genderLabel").text(i18n.t('register.member.gender'));
+			$("#genderMale").next().text(i18n.t('register.member.gender.male'));
+			$("#genderFemale").next().text(i18n.t('register.member.gender.female'));
+			$(".region").text(i18n.t('register.address.region'));
+			$.getJSON( extractRootUrl(retUrlPrefix) + "agent/wechat/login/dynamic/list?siteId=" + retSiteId , function( response ) {
+				var fields = [];
+				$.each( response.data.content, function( i, val ) {
+					if (val.name == 'checkout.member.birth'){
+						// console.log(val);
+						fields.push( "<div class=\"input-inset customAttributeId" + val.customAttributeId +"\"><birth>" + i18n.t(val.name) + "</birth>:<input type=\"" + val.type + "\" class=\"input-inset-birth\" name=\"" + val.id + "\" id=\"" + val.id + "\" maxlength=\"100\"></div>" );
+					} else {
+						if ( val.name == 'register.address.province' || val.name == 'register.address.county' || val.name == 'register.address.city' ){
+							fields.push( "<input type=\"hidden\" class=\"form-control customAttributeId" + val.customAttributeId + "\" name=\"" + val.name + "\" id=\"" + val.id + "\" maxlength=\"100\">" );
+						} else {
+							fields.push( "<div class=\"input-inset customAttributeId col-lg-12 col-md-12 col-xs-12" + val.customAttributeId + "\">" +
+							"<label class=\"col-lg-3 col-md-3 col-xs-3\">" + i18n.t(val.name) + "</label>" +
+						   "<input type=\"" + val.type + "\" class=\"form-control col-lg-7 col-md-7 col-xs-7\" name=\"" + val.id + "\" id=\"" + val.id + "\" maxlength=\"30\" >" +
+									"</div>" );
+						}
+					}
+					dynamicFields.push(val);
+				});
+				$('#dynamicFields').append(fields.join(""));
+				$.each(dynamicFields, function(i, val){
+					$("#" + val.id).i18n();
+				});
+				loadMemberInfo();
+			});
+			$.postJSON = function(url, data, callback) {
+				return jQuery.ajax({
+					headers: {
+						'Accept': 'application/json',
+						'Content-Type': 'application/json'
+					},
+					'type': 'POST',
+					'url': url,
+					'data': JSON.stringify(data),
+					'dataType': 'html',
+					'success': callback
+				});
+			};
+			var syncSiteMember = function( retclubAccountName ){
+				//alert("going to sync member: " + retclubAccountName );
+				var CK_NAME_SITE_MEMBER = "siteMember";
+				var localCookieMap = {};
+				localCookieMap[ CK_NAME_SITE_MEMBER ] = retclubAccountName;
+				var retUid = RET.cookieObj.getLocalCookie(RETUID_COOKIE);
+				RET.sync.siteMember( retUid, retSiteId, localCookieMap, retUrlPrefix );
+			};
+			$("#signUp").click(function () {
+				if ($("#name").val().trim() == '') {
+					alert('请输入会员名');
+					$("#name").focus();
+					return ;
+				}
+				var useNameReg=/^[a-zA-Z0-9_\u4e00-\u9fa5]{2,16}$/;
+				if(!useNameReg.test($("#name").val())){
+					alert("只允许输入2-16位数字、字母、汉字及下划线");
+					$(this).focus();
+					return;
+				}
+				if ($("#phone").val().trim() == '') {
+					alert('请输入手机号码');
+					$("#phone").focus();
+					return;
+				}
+				if (validatePhone($("#phone").val()) || $("#phone").val().length < 5) {
+					alert(i18n.t('register.phone.error'));
+					$("#phone").focus();
+					return;
+				}
+				var reg=/^1[34578]\d{9}$/;
+				if(!reg.test($("#phone").val())){
+					alert("手机号码格式输入有误");
+					$(this).focus();
+					return;
+				}
+					$("#clubId").val(clubId);
+					$("#memberId").val(mid);
+					if (true) {
+						var attributes = [];
+						var dynamicCheck = true;
+						$.each(dynamicFields, function (i, val) {
+							var attribute = {};
+							if ($("#" + val.id).val()) {
+								attribute.id = val.id;
+								attribute.value = $("#" + val.id).val();
+								attribute.name = val.name;
+							}
+							attributes.push(attribute);
+						});
+						if (!dynamicCheck) {
+							return;
+						}
+						var wechatId = '';
+						$.each(dynamicFields, function (i, val) {
+							if (val.name == "register.wechat.id")
+								wechatId = $('#' + val.id).val();
+						});
+						if (wechatId == '')
+							wechatId = $("#name").val().trim();
+						var ValidationCodeData = {
+							"clubId": clubId,
+							"wechatId": wechatId,
+							"memberId": userId,
+							"phone": $("#phone").val().trim(),
+							"email": $("#email").val(),
+							"name": $("#name").val().trim(),
+							"account": wechatId,
+							"gender": $('input#genderMale')[0].checked ? "M" : "F",
+							"retUid": RET.cookieObj.getLocalCookie(RETUID_COOKIE), /*"2a8ada1b-f0c1-d7ac-641-522461259f1f"*/
+							"loginFieldList": attributes,
+							"smsValid": true
+						};
+						$.ajax({
+							url: regUrl,
+							headers: {
+								"Access-Control-Allow-Origin": "*",
+								'Content-Type': 'application/json'
+							},
+							method: 'POST',
+							dataType: 'json',
+							data: JSON.stringify(ValidationCodeData),
+							success: function (response) {
+								var accountName = response.data;
+								if (accountName == wechatId) {
+									syncSiteMember( accountName );
+									alert("验证码发送成功");
+									var timer=null;
+									var time=60;
+									timer=setInterval(function(){
+										if(time<=0){
+											clearInterval(timer);
+											$("#signUp").val("重新发送");
+											$("#signUp").attr("disabled",false);
+										}
+										else {
+											$("#signUp").attr("disabled",true)
+											$("#signUp").val("时间"+(time)+"秒");
+											time--;
+										}
+									},1000);
+								}
+								else if(accountName.length==0){
+									alert("验证码发送失败，请填写正确的手机号码");
+								}
+							},
+							error: function (err) {
+								if(err.status==500){
+									alert("验证码发送失败，手机号码重复注册");
+								}
+							}
+						});
+					}
+			});
+		});
+		function register() {
+			var regtest=/^[0-9]\d$/
+			if ($("#verification").val().trim() == '') {
+				alert('请输入验证码');
+				$("#verification").focus();
+				return;
+			}
+			else if(!regtest.test($("#verification").val())){
+				alert('验证码输入有误');
+				$("#verification").focus();
+				return;
+			}
+			else{
+				var code=$("#verification").val();
+				var phone=$("#phone").val();
+				$.getJSON(extractRootUrl(retUrlPrefix) + "agent/wechat/smsValid?siteId=" + retSiteId + "&phoneNumber=" + phone + "&validCode=" + code, function (response) {
+					var data = response.data;
+					if (data==null ) {
+						alert("验证码不正确，注册失败");
+					}
+					else {
+						alert("注册成功");
+						var accountName=data.retchatAccount;
+						RET.cookieObj.setLocalCookie(retchatAccount, encodeURIComponent(accountName), 3650);
+						RET.cookieObj.setLocalCookie("isLogin" + retchatAccount, 1, 3650);
+						$("#registerSuccess").css("display","block");
+					}
+				});
+			}
+		}
+		function loadMemberInfo(){
+			if( typeof(mid) == "undefined" || mid.length == 0 )
+				return;
+			jQuery.ajax({
+				url: urlMember + mid,
+				async: false,
+				success: function (resp) {
+					userId = resp.data.memberId;
+					$("#phone").val( resp.data.phoneNumber );
+					$("#name").val( resp.data.name );
+					$("#email").val( resp.data.email );
+
+					if( resp.data.customerValues == null )
+						return;
+
+					$.each( resp.data.customerValues, function( i, obj ) {
+						$( '.customAttributeId'+obj.customAttributeId ).val( obj.attributeValue );
+
+						$.each( $('#s_province option'), function( i, dom ){
+							if( dom.value == obj.attributeValue ){
+								$(dom).attr('selected', true);
+								change(1);
+							}
+						});
+
+						$.each( $('#s_city option'), function( i, dom ){
+							if( dom.value == obj.attributeValue ) {
+								$(dom).attr('selected', true);
+								change(2);
+							}
+						});
+
+						$.each( $('#s_county option'), function( i, dom ){
+							if( dom.value == obj.attributeValue )
+								$(dom).attr('selected', true);
+						});
+
+						if( $( '.customAttributeId'+obj.customAttributeId + " input" ).length > 0 ){
+							if( $( '.customAttributeId'+obj.customAttributeId + " input" ).is( "[type=date]" ) ){
+								document.getElementsByClassName('input-inset-birth')[0].value = obj.attributeValue;
+							}
+							if( $( '.customAttributeId'+obj.customAttributeId + " input" ).is( "[type=text]" ) ){
+								$( '.customAttributeId'+obj.customAttributeId + " input" ).val( obj.attributeValue )
+							}
+						}
+					});
+				}
+			});
+		}
+		function getParameterByName(name) {
+			name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+			var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+					results = regex.exec(location.search);
+			return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+		}
+
+		function validateEmail(email) {
+			var reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+			return reg.test(email);
+		}
+
+		function validatePhone(phone) {
+			var reg = /\D+/g;
+			return reg.test(phone);
+		}
+	</script>
+	<!-- selector -->
+	<script type="text/javascript">
+		//var Gid  = document.getElementById ;
+		var showArea = function(){
+			document.getElementById('show').innerHTML = "<h3>省" + document.getElementById('s_province').value + " - 市" +
+					document.getElementById('s_city').value + " - 县/区" +
+					document.getElementById('s_county').value + "</h3>"
+		}
+
+		document.getElementById('s_county').setAttribute('onchange','showArea()');
+
+	</script>
+</body>
+</html>

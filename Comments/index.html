@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<title>##title</title>
+	<!-- Bootstrap Core CSS -->
+	<link rel="stylesheet" type="text/css" href="css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/retclub.css">
+	<link rel="stylesheet" type="text/css" href="css/thumbnail-gallery.css">
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+	<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+</head>
+<body>
+<div class="container-fluid" onclick="gotoPersonalInfo()">
+	<div class="col-md-12 col-xs-12" align="center">
+		<div class="outter" >
+			<div class="circle">
+				<img src="" id="pointIcon"  />
+			</div>
+			<!--<div class="account-info top-info">-->
+			<!-- -->
+			<!--&lt;!&ndash;&nbsp<label id="label_phone"></label>&ndash;&gt;-->
+			<!--</div>-->
+			<div class="account-info">
+				<label id="label_account"></label>&nbsp;
+			</div>
+		</div>
+	</div>
+</div>
+<div class="panel panel-info">
+	<div id="orderLists"></div>
+	<div class="panel-heading">请选择评论项目</div>
+	<div class="panel-body">
+		<select id="itemSelector" class="form-control" onchange="listComment()">
+		</select>
+	</div>
+</div>
+
+<!-- Page Content -->
+<div class="panel panel-info">
+	<div class="panel-heading">最新会员评论</div>
+	<div class="panel-body">
+		<div class="row order-detail list-group" id="itemCommentList">
+			<!--<div class="list-group-item" id="club_79_rule_1435198705429_1"></div>-->
+		</div>
+		<!-- /.container -->
+	</div>
+</div>
+
+
+<div id="newComment" class="panel panel-info" style="display:none">
+	<div class="panel-heading">请输入您的评论(100字以内)</div>
+	<div class="panel-body">
+		<div class="form-group">
+			<textarea class="form-control" rows="3" maxlength="100" id="itemComment" ></textarea>
+		</div>
+		<button id="save" type="button" class="btn btn-success" onclick="addComment()">提交</button>
+	</div>
+</div>
+
+<div style="height:60px"></div>
+
+<!-- jQuery -->
+<script src="js/jquery-1.11.1.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="js/bootstrap.min.js"></script>
+
+<!-- jQuery Mobile -->
+<script type="text/javascript" src="js/i18next-1.7.4.min.js"></script>
+<script type="text/javascript" src="js/i18nSetting.js"></script>
+<!-- <script type="text/javascript" src="##retchat_js?v=3"></script> -->
+<script id="ret-js-template" type="text/javascript"></script>
+
+<script>
+	$(document).on('click', '.thumbnail', function(event) {
+		var itemCode = $(this).attr('info');
+		doClick(itemCode);
+		$("#light").html($("#data_"+itemCode).html());
+		window.scrollTo(0, 0);
+		$("#light").css("display","block");
+		$("#fade").css("display","block");
+		$("###main_element").hide();
+	});
+
+	$(document).on('click', '#light', function(event) {
+		$("#light").css("display","none");
+		$("#fade").css("display","none");
+		$("###main_element").show();
+	});
+
+	if($('#logoImg').attr('src') != ''){
+		$('#iheader').css('display','block');
+	}
+
+	if($('#footer_logo').attr('src') != ''){
+		$('#footer').css('display','block');
+	}
+
+	var retUrlPrefix="##retUrlPrefix";
+	var retSiteId = ##siteId;
+	var retCert = "##retCert";
+	var shouldLoginRetclubFirst = ##enable_login;
+
+	(function() {
+		var ret = document.createElement('script');
+		ret.type = 'text/javascript';
+		ret.async = true;
+		ret.src = retUrlPrefix + 'ret.js?' + (new Date().getDate());
+		var currentJs = document.getElementById('ret-js-template');
+		currentJs.parentNode.insertBefore(ret, currentJs);
+	})();
+
+	var getCookie = function(name){
+		var nameEQ = name + "=";
+		var ca = document.cookie.split(';');
+		for ( var i = 0, limit = ca.length; i < limit; i++) {
+			var c = ca[i];
+			c = c.trim();
+			if (c.indexOf(nameEQ) == 0){
+				return c.substring(nameEQ.length);
+			}
+		}
+		return '';
+	};
+
+	var extractRootUrl = function (url) {
+		var rootUrl
+		var domain;
+		var matches = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
+		rootUrl = matches && matches[0];
+		domain = matches && matches[1];
+		return rootUrl;
+	};
+
+	var retchatAccount = "##retchat_id";
+	var elementId = "##main_element";
+	var appid = "##appid";
+	var WECHAT_PUBLIC_OPENID_COOKIE = appid + "__wopenid";
+	var clubId = "##clubId";
+	var siteId = "##siteId";
+	var redirectUri= "http%3A%2F%2F##retchat_server%2Fretclub/##web_folder";
+	var loginUrl = "##loginUrl";
+	var host = extractRootUrl( retUrlPrefix ); //"http://##retchat_server";
+	//var dataUrl = "http://##retchat_server/ipcrm-manager/api/ipcrm/public/point?siteId=" + siteId + "&member=";
+	var urlMember = host + "agent/wechat/getRetclubMemberInfo?siteId=" + retSiteId + "&accountName=";
+	//var itemDataUrl = "http://##retchat_server/ipcrm-manager/api/ipcrm/item/data/commend/item/list?siteId=" + siteId;
+	var listItemBySite = host + "agent/wechatOrder/list/items?siteId=" + retSiteId;
+	var itemCommentListUrl = host + "agent/wechatOrder/list/itemCommentBySite?siteId=" + retSiteId + "&itemId=" ;
+	var itemCommentAddUrl = host + "agent/wechatOrder/addItemComment?siteId=" + retSiteId;
+	var orderListsUrl = host + "agent/wechatOrder/getOrderList?siteId=" + retSiteId + "&memberId=";
+	var ua = navigator.userAgent.toLowerCase();
+	var mid = getCookie(retchatAccount);
+	var isLogin = getCookie("isLogin" + retchatAccount);
+	var userId = null;
+	$(function() {
+		// for i18nt
+		$("#formTitle").text('##title');
+		//$("#submitButton").val(i18n.t('checkout.login'));
+
+		$("#phone").i18n();
+		//$("#phoneLabel").text('*' + i18n.t('checkout.member.phone'));
+		$("#name").i18n();
+		//$("#nameLabel").text('*' + i18n.t('checkout.member.name'));
+		//$("#emailLabel").text('*' + i18n.t('checkout.member.email'));
+		//$("#wechatLabel").text(i18n.t('register.wechat.id'));
+		$("#account").i18n();
+		//$("#accountLabel").text('*' + i18n.t('checkout.member.account'));
+		$("#genderLabel").text(i18n.t('register.member.gender'));
+		$("#genderMale").next().text(i18n.t('register.member.gender.male'));
+		$("#genderFemale").next().text(i18n.t('register.member.gender.female'));
+		$(".region").text(i18n.t('register.address.region'));
+		if( typeof(mid) != "undefined" && mid.length > 0 ) {
+			$.postJSON = function(url, data, callback, errorCallBack) {
+				return jQuery.ajax({
+					headers: {
+						'Accept': 'application/json',
+						'Content-Type': 'application/json'
+					},
+					'type': 'POST',
+					'url': url,
+					'cache': false,
+					'data': JSON.stringify(data),
+					'dataType': 'json',
+					'success': callback,
+					'error': errorCallBack
+				});
+			};
+			$.get(urlMember + mid,function( resp ) {
+				userId = resp.data.memberId;
+				console.log(userId);
+				if( !resp.data )
+					return;
+				if( resp.data.phoneNumber ){
+					$("#label_phone").text( resp.data.phoneNumber );
+				}
+				if( resp.data.name ){
+					$("#label_account").text( resp.data.name );
+				}else{
+					$("#label_account").text( resp.data.accountName );
+				}
+				if( resp.data.headimgurl ){
+					$('#pointIcon').attr( 'src', resp.data.headimgurl );
+				}else{
+					$('#pointIcon').attr( 'src', 'images/points.png' );
+				}
+				if( !resp.data.memberEnable ){
+					$('#memberInActive').show();
+					$('#memberActive').hide();
+				}
+				$('#itemSelector').html('');
+				$.get(orderListsUrl+userId,function(resp) {
+					var respData = resp.data;
+					if (respData.content.length > 0) {
+						$.each(respData.content, function (i) {
+							var itemList=respData.content[i].orderItems;
+							for(var i=0;i<itemList.length;i++){
+								$('#itemSelector')
+										.append($("<option></option>")
+												.attr("value", itemList[i].itemId)
+												.text(itemList[i].name));
+							}
+						});
+
+						listComment()
+					}
+				});
+			});
+		}
+	});
+	function gotoPersonalInfo(){
+		window.location.href = '##personal_info';
+	}
+
+	function listComment(){
+		$('#itemCommentList').html('');
+		var now = new Date()
+		$.ajax({
+			url: itemCommentListUrl + $( "#itemSelector" ).val() + '&limit=' + 20,
+			cache: false,
+			type: "GET",
+			dataType: "json",
+			success: function(resp) {
+				$('#newComment').show();
+				if(resp.data){
+					$.each(resp.data, function(index, item){
+						var cDate = new Date(item.createDate);
+						var newFlag = false;
+						if(now.getFullYear() === cDate.getFullYear() &&
+								now.getMonth() === cDate.getMonth() &&
+								now.getDate() === cDate.getDate()){
+							newFlag = true;
+						}
+						$('#itemCommentList').append('<div class="list-group-item" id="club_79_rule_1435198705429_1"><img class="img-responsive" style="border-radius: 15%;" src="' + item.headimgurl + '"><div class="itemName"><strong>' + item.memberName + '</strong></div><div class="itemDate">' + "&nbsp&nbsp&nbsp" + timestampToDateTime(item.createDate) + (newFlag ? '&nbsp<span class="label label-danger">New</span>' : '') +'</div><div class="itemDesc">' + "&nbsp&nbsp&nbsp" + item.comment + '</div></div>');
+					})
+				}else{
+
+				}
+			},
+			error: function(a) {
+				alert('服务发生错误');
+			}
+		});
+	}
+
+	function doClick(itemCode){
+		//RETchat.weixinInit(retchatAccount, clubId, appid);
+		//RETchat.item(itemCode);
+		//RETchat.track();
+	}
+
+	function retchatCallBack() {
+		//clear empty row
+		$(".list-group-item").each(function() {
+			if ($.trim($(this).html()) == '') $(this).remove();
+		});
+	}
+
+	function getParameterByName(name) {
+		name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+		var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
+		return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+	}
+
+	function addComment() {
+		$('#save').addClass('disabled');
+		$('#save').removeAttr('data-toggle');
+		if( $("#itemComment").val()==""){
+			alert('请输入评论内容');
+			$("#itemComment").focus();
+			return;
+		}
+		if(confirm('确认送出评论')){
+			var comment = {"id":null, "memberId":userId, "siteId": retSiteId, "createDate": new Date().getTime(), "itemId":$( "#itemSelector" ).val(), "comment":$( "#itemComment" ).val() };
+			$.postJSON(itemCommentAddUrl, comment,
+					function(response) {
+						$("#itemComment").val('');
+						listComment();
+						$('#save').removeClass('disabled');
+						$('#save').attr("data-toggle", "modal");
+
+					});
+		}
+	}
+
+	function timestampToDateTime(timestamp) {
+		if(timestamp){
+			var dt = new Date(timestamp);
+			var year = dt.getFullYear();
+			var month = dt.getMonth() + 1;
+			var day = dt.getDate();
+			var hour = dt.getHours();
+			var min = dt.getMinutes();
+			var sec = dt.getSeconds();
+			if (month < 10)
+				month = '0' + month;
+			if (day < 10)
+				day = '0' + day;
+			if (hour < 10)
+				hour = '0' + hour;
+			if (min < 10)
+				min = '0' + min;
+			if (sec < 10)
+				sec = '0' + sec;
+			return year + "-" + month + "-" + day + ' ' + hour + ':' + min + ':' + sec;
+		}else{
+			return "";
+		}
+	}
+
+
+</script>
+</body>
+</html>

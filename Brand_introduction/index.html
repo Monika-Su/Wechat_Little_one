@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no" name="viewport" id="viewport" />
+<title>品牌介绍</title>
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+</head>
+<body>
+<div class="container">
+	<div class="page ">
+		<img  src="images/bg1.gif">
+		<div class="content">
+			<p>秉承对母婴行业的无限热爱</p>
+			<p>，以高度的责任感和使命感，前</p>
+			<p>瞻全球视野，聚焦国际品牌，甄</p>
+			<p>选来自全球的知名母婴食品、用</p>
+			<p>品等品牌，致力于为您和您的宝</p>
+			<p>贝提供安全、优质、纯净的进口</p>
+			<p>高端母婴系列产品！</p>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+<script id="ret-js-template" type="text/javascript"></script>
+<script>
+	var retchatAccount = "##retchat_id";
+	var appid = "##appid";
+	var mchId="##mchId";
+	var retUrlPrefix="##retUrlPrefix";
+	var retSiteId = "##siteId";
+	var retCert = "##retCert";	(function() {
+		var ret = document.createElement('script');
+		ret.type = 'text/javascript';
+		ret.async = true;
+		ret.src = retUrlPrefix + 'ret.js?' + (new Date().getDate());
+		var currentJs = document.getElementById('ret-js-template');
+		currentJs.parentNode.insertBefore(ret, currentJs);
+	})();
+	var getCookie = function(name){
+		var nameEQ = name + "=";
+		var ca = document.cookie.split(';');
+		for ( var i = 0, limit = ca.length; i < limit; i++) {
+			var c = ca[i];
+			c = c.trim();
+			if (c.indexOf(nameEQ) == 0){
+				return c.substring(nameEQ.length);
+			}
+		}
+		return '';
+	};
+	var extractRootUrl = function (url) {
+		var rootUrl
+		var domain;
+		var matches = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
+		rootUrl = matches && matches[0];
+		domain = matches && matches[1];
+		return rootUrl;
+	};
+	var host = extractRootUrl( retUrlPrefix ); // "http://##retchat_server";
+	//var dataUrl = host + "http://##retchat_server/ipcrm-manager/api/ipcrm/public/point?siteId=" + retSiteId + "&member=";
+	var urlMember = host + "agent/wechat/getRetclubMemberInfo?siteId=" + retSiteId + "&accountName=";
+	var loadQrcodeUrl = host + "agent/wechat/loadQRCode?clubId=##clubId&accountName=";
+	var ua = navigator.userAgent.toLowerCase();
+	var ticket = getParameterByName("ticket");
+	var mid = getCookie(retchatAccount);
+	var shouldLoginRetclubFirst ="##enable_login";
+	var WECHAT_PUBLIC_OPENID_COOKIE = appid + "__wopenid";
+	if(ticket){
+		mid = getParameterByName("mid");
+		$("#qrcodeUrl").attr("src","https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket="+ticket);
+		if( typeof(mid) != "undefined" && mid.length > 0 ){
+			$.ajax({
+				url: urlMember + mid,
+				cache: false,
+				type: "GET",
+				dataType: "json",
+				success: function( resp ) {
+					if( resp.data.name ){
+						$("#label_account").text( resp.data.name);
+					}else{
+						$("#label_account").text( resp.data.accountName);
+					}
+					if( resp.data.headimgurl ){
+						$('#pointIcon').attr( 'src', resp.data.headimgurl );
+					}else{
+						$('#pointIcon').attr( 'src', 'images/points.png');
+					}
+				},
+				error: function(a) {
+				}
+			});
+		}
+	}else{
+		loadQrcode();
+	}
+	function loadQrcode() {
+		$.get(loadQrcodeUrl + mid, function(resp) {
+			if(resp){
+				window.location.href = 'index.html?ticket=' + resp.data + '&mid=' + mid;
+			}
+		});
+	}
+	function getParameterByName(name) {
+		name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+		var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+				results = regex.exec(location.search);
+		return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+	}
+	function  onlineSurvey() {
+		window.location=("##onlineSurvey_address")
+	}
+</script>
+</body>
+</html>

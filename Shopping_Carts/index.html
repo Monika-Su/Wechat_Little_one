@@ -1,0 +1,291 @@
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<title>购物车</title>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+	<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+	<style>
+		a{
+			color:#333;
+		}
+	</style>
+</head>
+<body>
+<div class="page">
+	<div class="container">
+		<div id="haveItem">
+			<div class="row" id="itemList">
+				<div style="float:right;padding-right: 20px;margin-top: 10px;" id="totalPriceLabel"></div>
+				<div style="height: 70px"></div>
+			</div>
+		</div>
+		<div id="noItem" class="row" style="text-align:center;padding-top: 20%;">
+			<img src="images/no_items.jpg">
+			<div style="text-align: center;color: #999;font-size: 25px;margin-top: 30px;">购物车目前没有商品喔!!</div>
+		</div>
+	</div>
+	<!--<nav class="navbar navbar-inverse navbar-fixed-bottom ">-->
+	<div class="confirmOrder">
+		<button  id="checkBtn" class="btn btn-info main-button" type="button" onclick="buyItem()">立即付款</button>
+	</div>
+	<!--</nav>-->
+</div>
+<script src="js/jquery-1.11.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/i18next-1.7.4.min.js"></script>
+<script type="text/javascript" src="js/i18nSetting.js"></script>
+<!--<script type="text/javascript" src="//icemdev.retchat.com/RETchat.js?v=3"></script>-->
+<script id="ret-js-template" type="text/javascript"></script>
+<script>
+	var retUrlPrefix="##retUrlPrefix";
+	var retSiteId = '##siteId';
+	var retCert = "##retCert";
+	var shoppingClubId =  "##clubId";
+	var appid = "##appid";
+	var WECHAT_PUBLIC_OPENID_COOKIE = appid + "__wopenid";
+	var listItemByCodeUrl = "agent/wechatOrder/list/itemsByCode?siteId=" + retSiteId + '&itemCodeList=';
+	var redirectUri = "http%3A%2F%2Fretclub.retchat.com%2Fretclub/2/0/2";
+	var shouldLoginRetclubFirst = "##enable_login";
+	(function() {
+		var ret = document.createElement('script');
+		ret.type = 'text/javascript';
+		ret.async = true;
+		ret.src = retUrlPrefix + 'ret.js?' + (new Date().getDate());
+		var currentJs = document.getElementById('ret-js-template');
+		currentJs.parentNode.insertBefore(ret, currentJs);
+	})();
+	var getCookie = function(name){
+		var nameEQ = name + "=";
+		var ca = document.cookie.split(';');
+		for ( var i = 0, limit = ca.length; i < limit; i++) {
+			var c = ca[i];
+			c = c.trim();
+			if (c.indexOf(nameEQ) == 0){
+				return c.substring(nameEQ.length);
+			}
+		}
+		return '';
+	};
+	var extractRootUrl = function (url) {
+		var rootUrl;
+		var domain;
+		var matches = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
+		rootUrl = matches && matches[0];
+		domain = matches && matches[1];
+		return rootUrl;
+	};
+	var retchatAccount = "##retchat_id";
+	var host = extractRootUrl( retUrlPrefix );
+	//var itemUrl = "http://icemdev.retchat.com/ipcrm-manager/api/ipcrm/item/data/order/list?sid=" + retSiteId + "&code=";
+	var goToCheckout ="##checkout_address"; // Ths is a custom link
+	var mid = getCookie(retchatAccount);
+	var isLogin = getCookie( "isLogin" + retchatAccount );
+	var userId=null;
+	var couponId=null;
+	var getCouponList=null;
+	var couponItemId={};
+	var couponList={};
+	var urlMember = extractRootUrl( retUrlPrefix ) + "agent/wechat/getRetclubMemberInfo?siteId=" +retSiteId + "&accountName=";
+	if( typeof(mid) != "undefined" && mid.length > 0 ) {
+		jQuery.ajax({
+			url: urlMember + mid,
+			success: function (resp) {
+				userId = resp.data.memberId;
+			},
+			async: false
+		});
+		var couponCountURL=extractRootUrl( retUrlPrefix )+"agent/wechatOrder/list/memberCoupons?siteId="+ retSiteId +"&memberId="+userId;
+//		$.get(couponCountURL,function(resp) {
+//			getCouponList = resp.data;
+//			if( getCouponList.length>0){
+//				$.each(getCouponList, function (index, item) {
+//					couponList.code = item.couponVO.code;
+//				});
+//			}
+//		})
+		//var postCoupon=extractRootUrl( retUrlPrefix ) +"agent/wechatOrder/getPriceWithCoupon?orderChannel=wechat&siteId="+retSiteId+"&memberId="+userId+"&memberCouponId="+couponId;
+	}
+	//获取用户领取的哪些优惠券，领取的次数。
+	var orderList = getCookie('cart-' +retchatAccount);
+	if (orderList) {
+		orderList = JSON.parse(orderList);
+		if (orderList.length > 0) {
+			$("#haveItem").css('display', 'block');
+			$(".confirmOrder").css('display', 'block');
+			$("#noItem").css('display', 'none');
+			var codeStr = "";
+			$.each(orderList, function(index, item) {
+				codeStr += item.code + ",";
+//				codeStr +=couponList.code+","
+			});
+			codeStr = codeStr.slice(0, -1);
+					//console.log(getCouponList.couponVO);
+					//couponItemId=getCouponList.couponVO.pointRuleVO.fixedRuleConditionVO.couponPromotionItems.itemId;
+			var quertItemUrl = extractRootUrl( retUrlPrefix ) + listItemByCodeUrl + codeStr;
+			$.get( quertItemUrl, function(resp) {
+					var tableContent = "";
+					$.each(resp.data, function(i) {
+						tableContent += "<div class='list-group-item itemList' id='" + resp.data[ i ].code + "' info='" + JSON.stringify( resp.data[i] ) + "'>";
+						tableContent += '<img class="outter" src="' + resp.data[ i ].img + '">';
+						tableContent += '<button  class="delete" onClick=delItem("count_' + resp.data[ i ].code + '")>删除</button>';
+						tableContent += '<div class="item_Name">' + resp.data[ i ].name + '</div>';
+						tableContent += '<div class="item_Price">价格：¥' + resp.data[i].discountPrice + '</div>';
+						tableContent+='<div class="pay_count">购买数量</div>';
+						tableContent += '<div class="item_count">';
+						tableContent += '<button type="button" class="btn btn-circle btn-xl" onclick=minusCount("count_' + resp.data[ i ].code + '")>-</button>';
+						tableContent += '<input type="text" id="count_' + resp.data[ i ].code + '"  name="count" class="form-control input-number" value="' + orderList[i].count + '"maxlength="3" onblur="calTotal()"/>';
+						tableContent += '<button type="button" class="btn btn-circle btn-xl btn-primary" onclick=plusCount("count_' + resp.data[ i ].code + '")>+</button>';
+						tableContent += '</div>';
+						tableContent += '</div>';
+					});
+					$("#itemList").html(tableContent);
+					$.each(orderList, function (index, item) {
+						if (item.code.length > 6) {
+							$(".item_Price").css("display", "none");
+							$(".pay_count").css("display", "none");
+							$(".item_count").css("display", "none");
+							$(".item_Name").css("margin-top","8%");
+						}
+					});
+					$('.input-number').bind('input  propertychange', function() {
+						if ($(this).val() > 0 && $(this).val() <= 999) {
+							var count = $(this).val();
+							var regtype =/^[1-9]*[1-9][0-9]*$/;
+							var reg=new RegExp(regtype);
+							if (count.match(reg)==null) {
+								alert('请输入大于零的整数!');
+								$(this).val("");
+							}
+						}
+						else if($(this).val("")){
+							$(this).val(0);
+						}
+						else{
+							alert('产品数量格式输入错误');
+							$(this).val("");
+						}
+					});
+					calTotal();
+				});
+		}
+		else {
+			$("#noItem").css('display', 'block');
+			$("#haveItem").css('display', 'none');
+			$(".confirmOrder").css('display', 'none');
+			alert("请用户先添加商品");
+		}
+	}
+	else {
+		$("#noItem").css('display', 'block');
+		$("#haveItem").css('display', 'none');
+		$(".confirmOrder").css('display', 'none');
+		alert("请用户先添加商品");
+	}
+
+	function plusCount(id) {
+		var count = parseInt($('#' + id).val());
+		if (count < 1000) {
+			$('#' + id).val(count + 1);
+		}
+		calTotal();
+		updateOrderList( id, 1 );
+	}
+	function minusCount(id) {
+		var count =$('#' + id).val();
+		if (count > 0) {
+			$('#' + id).val(count - 1);
+			calTotal();
+			updateOrderList( id, -1 );
+		}
+		else{
+			$('#' + id).val(0);
+		}
+	}
+	function buyItem() {
+		var orderItem = [];
+		if ($('.itemList').length > 0) {
+			var error = false;
+			$('.itemList').each(function() {
+				var itemJson=JSON.parse($(this).attr("info"));
+				var itemCount=parseInt($('#count_' + itemJson.code).val());
+				if (!(itemCount > 0 && itemCount <= 999)){
+					alert('产品数量格式错误, 请输入1到999');
+					$('#count_' + itemJson.code).focus();
+					error = true;
+				}
+				itemJson.buyCount = itemCount;
+				orderItem.push(itemJson);
+			});
+			if(!error){
+				var orderItemObject = {};
+				orderItemObject.list = orderItem;
+				window.localStorage["orderItem-" + retchatAccount] = JSON.stringify(orderItemObject);
+				if(typeof(mid)!= "undefined" && mid.length > 0 ){
+					window.location= goToCheckout;
+				}
+				else {
+					alert("请用户先登录");
+					window.location = "##user_address";
+				}
+			}
+		}
+	}
+	function updateOrderList( id, count ){
+		if( id.split('_').length != 2 )
+			return;
+		var code = id.split('_')[1];
+		$.each( orderList, function( index, item ){
+			if( item.code == code ){
+				item.count += count;
+			}
+		});
+		RET.cookieObj.setLocalCookie( "cart-" + retchatAccount, JSON.stringify(orderList), 3650 );
+	}
+	function delItem(id) {
+		if (confirm("是否确定删除该商品")) {
+			if (id.split('_').length != 2)
+				return;
+			var code = id.split('_')[1];
+			for (var i = 0; i < orderList.length; i++) {
+				if (orderList[i].code == code) {
+					orderList.splice(i, 1);
+					$("#"+code).remove();
+				}
+			}
+			RET.cookieObj.setLocalCookie( "cart-" + retchatAccount, JSON.stringify(orderList), 3650 );
+			calTotal();
+			if (orderList.length == 0) {
+				$("#noItem").css('display', 'block');
+				$("#haveItem").css('display', 'none');
+				$(".confirmOrder").css('display', 'none');
+			}
+		}
+	}
+	function calTotal() {
+		var total = 0;
+		var shipmentMax = 0;
+		$('.itemList').each(function() {
+			var itemJson = JSON.parse($(this).attr("info"));
+			var itemCode = itemJson.code;
+			var itemDiscount = itemJson.discountPrice;
+			var itemUnit = $('#count_' + itemCode).val();
+			var itemPrice = Math.round(eval(itemDiscount * itemUnit));
+			if(shipmentMax < itemJson.field4){
+				shipmentMax = itemJson.field4;
+			}
+			total += itemPrice;
+		});
+		$("#totalPriceLabel").html("商品总额 : ¥  " + total + "</br>运费：¥" + shipmentMax);
+		return total;
+	}
+</script>
+</body>
+</html>

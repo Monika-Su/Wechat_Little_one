@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>产品详情</title>
+    <link rel="stylesheet" type="text/css" href="css/retclub.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        img{
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!--<a href="index.html">&lt;返回</a>-->
+    <div class="description"></div>
+<h3 class='text1Style'>产品介绍</h3>
+    <div >
+        <img src="images/10.2.jpg" alt="">
+        <img src="images/10.3.jpg" alt="">
+        <img src="images/10.4.jpg" alt="">
+        <img src="images/10.5.jpg" alt="">
+    </div>
+    <div style="height:50px;"></div>
+    <nav class="navbar navbar-inverse navbar-fixed-bottom ">
+            <div class="Cart">
+                <a class="shoppingCart" type="button" onclick="register()"></a>
+                <span class="count"><b id="totalCount">0</b>件</span>
+                <span class="count">共<b  id="totalPriceLabel">0.00</b>元</span>
+            </div>
+            <div class="confirmOrder">
+                <a class="btn btn-info btn-lg" type="button" onclick="onceBuy()">立即购买</a>
+                <a  class="btn btn-info btn-lg" type="button" onclick="addCart()" >加入购物车</a>
+            </div>
+    </nav>
+<script src="js/jquery-1.11.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/i18next-1.7.4.min.js"></script>
+<script type="text/javascript" src="js/i18nSetting.js"></script>
+<!--<script type="text/javascript" src="//icem.retchat.com/RETchat.js?v=3"></script>-->
+<script id="ret-js-template" type="text/javascript"></script>
+    <script>
+        var retchatAccount = "littleone_account";
+        var retSiteId = "2";
+        var clubId = "10";
+        var appid = "wx75653af0649a1e91";
+        var WECHAT_PUBLIC_OPENID_COOKIE = appid + "__wopenid";
+        var mchId = "1271010601";
+        var retUrlPrefix="http://retclub.retchat.com/tracking/";
+        var retCert="8c143757ef97ae13dff23decc898af3a";
+        var shouldLoginRetclubFirst = "true";
+        var _RETUID_COOKIE = "__retuid";
+        var listItemByCodeUrl = "agent/wechatOrder/list/itemsByCode?siteId=" + retSiteId + '&itemCodeList='+clubId;
+        var redirectUri = "http%3A%2F%2F##retchat_server%2Fretclub/##web_folder";
+        var host = "http://icemdev.retchat.com/";
+        var loginUrl = "agent/wechat/isMemberExisted?siteId=" + retSiteId + '&clubId='+clubId+'&accountName=';
+        (function() {
+            var getCookie = function(name){
+                var nameEQ = name + "=";
+                var ca = document.cookie.split(';');
+                for ( var i = 0, limit = ca.length; i < limit; i++) {
+                    var c = ca[i];
+                    c = c.trim();
+                    if (c.indexOf(nameEQ) == 0){
+                        return c.substring(nameEQ.length);
+                    }
+                }
+                return '';
+            };
+            var extractRootUrl = function (url) {
+                var rootUrl;
+                var domain;
+                var matches = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
+                rootUrl = matches && matches[0];
+                domain = matches && matches[1];
+                return rootUrl;
+            };
+            var ret = document.createElement('script');
+            ret.type = 'text/javascript';
+            ret.async = true;
+            ret.src = retUrlPrefix + 'ret.js?' + (new Date().getDate());
+            var currentJs = document.getElementById('ret-js-template');
+            currentJs.parentNode.insertBefore(ret, currentJs);
+            var quertItemUrl = extractRootUrl( retUrlPrefix ) + listItemByCodeUrl;
+            $.get( quertItemUrl, function(resp) {
+                var tableContent = "";
+                $.each(resp.data, function (i) {
+                    tableContent += '<img class="popphoto" src="' + resp.data[i].img + '">';
+                    tableContent+='<div class="contentStyle">'
+                    tableContent += '<div class="itemName">' + resp.data[i].name + '</div>';
+                    tableContent+='<span class="priceSymbol">'+'¥'+'</span>'
+                    tableContent += '<span class="itemPrice">' +resp.data[i].discountPrice+ '</span>';
+                    tableContent+='</div>'
+                    function  automaticDate(){
+                        var orderList = getCookie('cart-' +retchatAccount);
+                        var newItem = {};
+                        var count=0;
+                        if(!orderList) {
+                            orderList = [];
+                            newItem.code = 10;
+                            newItem.count = count;
+                            $("#totalCount").text(newItem.count);
+                            $("#totalPriceLabel").text( (newItem.count * resp.data[i].discountPrice).toFixed(2) );
+                            orderList.push(newItem);
+                        }
+                        else if( 999>orderList.length>0){
+                            order= JSON.parse(orderList);
+                            $.each(order, function( index, item ) {
+                                if(item.code == 10) {
+                                    $("#totalCount").text(item.count);
+                                    $("#totalPriceLabel").text((item.count*resp.data[i].discountPrice).toFixed(2));
+                                }
+                            });
+                            if(order.length==0){
+                                $("#totalCount").text(count );
+                                $("#totalPriceLabel").text(count.toFixed(2));
+                            }
+                        }
+                    }
+                    automaticDate();
+                });
+                $(".description").append(tableContent);
+            });
+        })();
+        var getCookie = function(name){
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for ( var i = 0, limit = ca.length; i < limit; i++) {
+                var c = ca[i];
+                c = c.trim();
+                // console.log(c);
+                if (c.indexOf(nameEQ) == 0){
+                    return c.substring(nameEQ.length);
+                }
+            }
+            return '';
+        };
+        var extractRootUrl = function (url) {
+            var rootUrl;
+            var domain;
+            var matches = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
+            rootUrl = matches && matches[0];
+            domain = matches && matches[1];
+            return rootUrl;
+        };
+        //    var itemUrl = "http://##retchat_server/ipcrm-manager/api/ipcrm/item/data/order/list?sid=" + shoppingRetSiteId + "&code=";
+        //    var goToCheckout = "##checkout_address"; // Ths is a custom link
+        var mid = getCookie(retchatAccount);
+        var isLogin = getCookie( "isLogin" + retchatAccount );
+        function getParameterByName(name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
+            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+        function addCart(itemCode){
+            var count=1;
+            if(count > 0 && count <= 999){
+                var orderList = getCookie('cart-' +retchatAccount);
+                var newItem = {};
+                if(!orderList){
+                    orderList = [];
+                    newItem.code = 10;
+                    newItem.count=count;
+                    $("#totalCount").text(newItem.count);
+                    $("#totalPriceLabel").text((newItem.count*($(".itemPrice").text())).toFixed(2));
+                    orderList.push(newItem);
+                }else{
+                    orderList  = JSON.parse(orderList );
+                    var isNew = true;
+                    $.each(orderList, function( index, item ) {
+                        if(item.code == 10){
+                            if(item.count>=0){
+                                item.count = item.count + count;
+                                $("#totalCount").text(item.count);
+                                $("#totalPriceLabel").text((item.count*($(".itemPrice").text())).toFixed(2));
+                                isNew = false;
+                            }
+                        }
+                    });
+                    if(isNew){
+                        newItem.code = 10;
+                        newItem.count = count;
+                        $("#totalCount").text(newItem.count);
+                        $("#totalPriceLabel").text((newItem.count*($(".itemPrice").text())).toFixed(2));
+                        orderList.push(newItem);
+                    }
+                }
+                RET.cookieObj.setLocalCookie( "cart-" + retchatAccount, JSON.stringify(orderList), 3650 );
+            }
+        }
+        $("tr:gt(1):even").css("background","#ecf5fc");
+        function onceBuy(){
+            if(isLogin=="1") {
+                addCart();
+                window.location = "http://retclub.retchat.com/retclub/2/0/21/";
+            }
+            else if(isLogin.length==0||isLogin=="0")
+            {
+                RET.cookieObj.setLocalCookie("isLogin" + retchatAccount, 0, 3650);
+                window.location ="http://retclub.retchat.com/retclub/2/0/3/";
+            }
+        }
+        function register() {
+            if(isLogin=="1") {
+                window.location = "http://retclub.retchat.com/retclub/2/0/21/";
+            }
+            else if(isLogin.length==0||isLogin=="0")
+            {
+                RET.cookieObj.setLocalCookie("isLogin" + retchatAccount, 0, 3650);
+                window.location ="http://retclub.retchat.com/retclub/2/0/3";
+            }
+        }
+    </script>
+</body>
+</html>

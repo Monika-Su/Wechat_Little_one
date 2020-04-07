@@ -1,0 +1,89 @@
+img.img-responsive {
+   display: block;
+   height: 50px;
+   width: 50px;
+  float:left;
+}
+
+.itemName {
+  margin-left: 70px;
+}
+
+.itemPrice {
+  color:red;
+  margin-left: 70px;
+}
+
+.col-xs-6 {
+  width: 100%;
+}
+
+.thumb{
+    margin-bottom: 30px;
+    height: 50px;
+}
+
+footer {
+    margin: 50px 0;
+}
+.col-xs-6 {
+    padding-right: 20px;
+    padding-left: 20px;
+}
+
+.thumbnail {
+	background-color: transparent;
+    position: absolute;
+	padding-top: 9px;
+	padding-left: 0px;
+	padding-right: 3px;
+	padding-bottom: 3px;
+    margin-bottom: 5px;
+    overflow: hidden;
+    height: 75px;
+    width: 90%;
+    border: 0px;
+}
+
+.black_overlay{
+        display: none;
+        position: absolute;
+        top: 0%;
+        left: 0%;
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        z-index:1001;
+        -moz-opacity: 0.8;
+        opacity:.80;
+        filter: alpha(opacity=80);
+}
+
+.white_content {
+        display: none;
+        position: absolute;
+        top: 0%;
+        left: 0%;
+        width: 100%;
+        height: 100%;
+        padding: 1px;
+        border: 1px solid orange;
+        background-color: white;
+        z-index:1002;
+        overflow: auto;
+}
+
+.popphoto {
+    max-height:100%;
+    max-width:100%;
+
+}
+
+.top-info{
+         margin-bottom:5px;
+}
+
+.telephone{
+        height: 30px;
+        vertical-align: middle;
+}

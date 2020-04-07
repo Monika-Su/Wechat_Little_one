@@ -1,0 +1,17 @@
+.list-group-item{
+	background-color:#ededef;
+}
+
+.top-info{
+         margin-bottom:5px;
+}
+
+.telephone{
+        height: 30px;
+        vertical-align: middle;
+}
+.btn-success {
+    color: #fff;
+    background-color: #8cd2bd;
+    border-color: #8cd2bd;
+}

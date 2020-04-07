@@ -1,0 +1,318 @@
+        body {
+        font-family: "宋体";  color:#22383f;
+        }
+        .form-field {
+            border: 1px solid #c9b7a2;
+            background: #FFFFFF;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            color: #c9b7a2;
+            -webkit-box-shadow: rgba(255, 255, 255, 0.4) 0 1px 0, inset rgba(000, 000, 000, 0.7) 0 0px 0px;
+            -moz-box-shadow: rgba(255, 255, 255, 0.4) 0 1px 0, inset rgba(000, 000, 000, 0.7) 0 0px 0px;
+            box-shadow: rgba(255, 255, 255, 0.4) 0 1px 0, inset rgba(000, 000, 000, 0.7) 0 0px 0px;
+            padding: 12px;
+			margin-top: 20px;
+            margin-bottom: 20px;
+            font-size: 20px;
+	        width: 100%;
+        }
+
+        .form-field:focus {
+            background: #fff;
+            color: #725129;
+        }
+
+        .form-container h2 {
+            text-shadow: #e6cfb3 0 1px  0;
+            font-size:   36px;
+            margin:      0       0 10px 0;
+            font-weight: bold;
+            text-align:  center;
+        }
+
+        .form-title {
+            margin-bottom: 10px;
+            color: #5c4225;
+            text-shadow: #e6cfb3 0 1px 0;
+            font-size: 20px;
+	padding-left: 10px;
+            -webkit-column-count: 3;
+            -moz-column-count: 3;
+            column-count: 3;
+        }
+
+
+        .form-title [type=radio][name=gender]{
+            width: 30px !important;
+            height: 30px!important;
+        }
+        .submit-container {
+            margin: 8px 0;
+            text-align: center;
+            float: left;
+            width: 100%;
+        }
+        .submit-button {
+            border: 1px solid #76b1fd;
+            background: #76b1fd;
+            -webkit-border-radius: 6px;
+            -moz-border-radius: 6px;
+            border-radius: 6px;
+            -webkit-box-shadow: rgba(255, 255, 255, 0.4) 0 1px 0, inset rgba(255, 255, 255, 0.4) 0 1px 0;
+            -moz-box-shadow: rgba(255, 255, 255, 0.4) 0 1px 0, inset rgba(255, 255, 255, 0.4) 0 1px 0;
+            box-shadow: rgba(255, 255, 255, 0.4) 0 1px 0, inset rgba(255, 255, 255, 0.4) 0 1px 0;
+            color: #FFFFFF;
+            font-family: helvetica, serif;
+            padding: 20px 10px;
+            font-size: 35px;
+            text-decoration: none;
+            vertical-align: middle;
+            /* width: 90%; */
+            margin-top: 30px;
+            margin-bottom: 50px;
+            border-radius: 50%;
+        }
+
+        .submit-button:hover {
+            border: 1px solid #b6c94b;
+            text-shadow: #548520 0 1px 0;
+            background: #c5d85d;
+/*            background: -webkit-gradient(linear, left top, left bottom, from(#8dc059), to(#6aa436));
+            background: -webkit-linear-gradient(top, #8dc059, #6aa436);
+            background: -moz-linear-gradient(top, #8dc059, #6aa436);
+            background: -ms-linear-gradient(top, #8dc059, #6aa436);
+            background: -o-linear-gradient(top, #8dc059, #6aa436);
+            background-image: -ms-linear-gradient(top, #8dc059 0%, #6aa436 100%);*/
+            color: #fff;
+        }
+
+        .cancel-button {
+            border: 1px solid #5c4225;
+            background: #5bc0de;
+            background: -webkit-gradient(linear, left top, left bottom, from(#5bc0de), to(#5bc0de));
+            background: -webkit-linear-gradient(top, #5bc0de, #5bc0de);
+            background: -moz-linear-gradient(top, #5bc0de, #5bc0de);
+            background: -ms-linear-gradient(top, #5bc0de, #5bc0de);
+            background: -o-linear-gradient(top, #5bc0de, #5bc0de);
+            background-image: -ms-linear-gradient(top #5bc0de 0%, #5bc0de 100%);
+            -webkit-border-radius: 6px;
+            -moz-border-radius: 6px;
+            border-radius: 6px;
+            -webkit-box-shadow: rgba(255, 255, 255, 0.4) 0 1px 0, inset rgba(255, 255, 255, 0.4) 0 1px 0;
+            -moz-box-shadow: rgba(255, 255, 255, 0.4) 0 1px 0, inset rgba(255, 255, 255, 0.4) 0 1px 0;
+            box-shadow: rgba(255, 255, 255, 0.4) 0 1px 0, inset rgba(255, 255, 255, 0.4) 0 1px 0;
+            color: #FFFFFF;
+            font-family: helvetica, serif;
+            padding: 8.5px 18px;
+            font-size: 36px;
+            text-decoration: none;
+            vertical-align: middle;
+            width: 80%;
+            height:60px;
+        }
+
+            .submit-button:active {
+            text-shadow: #31540c 0 1px 0;
+            border: 1px solid #447314;
+            background: #8dc059;
+            background: -webkit-gradient(linear, left top, left bottom, from(#6aa436), to(#6aa436));
+            background: -webkit-linear-gradient(top, #6aa436, #8dc059);
+            background: -moz-linear-gradient(top, #6aa436, #8dc059);
+            background: -ms-linear-gradient(top, #6aa436, #8dc059);
+            background: -o-linear-gradient(top, #6aa436, #8dc059);
+            background-image: -ms-linear-gradient(top, #6aa436 0%, #8dc059 100%);
+            color: #fff;
+            }
+
+	.panel {
+		  background-color: #fff;
+	}
+
+	.panel-info {
+		    border-style: none;
+			border-width: 0px;
+	}
+	.input-inset{
+        margin-bottom: 5px;
+        outline: 0;
+        border-radius: 5px;
+	}
+	.form-control{
+        display: inline;
+	}
+
+           birth {
+            margin-left: 12px;
+            font-size: 25px;
+            display: inline-block;
+            margin-bottom: auto;
+            margin-top: auto;
+            font-weight: 700;
+           }
+
+            select{
+            -webkit-appearance:none;
+            display:block;
+            width: 100%;
+            margin: 0px auto;
+            padding: 5px 0px;
+            background-color: #fff;
+            padding-left: 8px;
+        }
+
+            .input-inset-birth{
+            -webkit-appearance: none;
+            border-style: inset;
+            border-width: 0px;
+            border-color: #DDDDDD;
+            margin-bottom: 0px;
+            background-color: #FFFFFF;
+            white-space: nowrap;
+            width: 75%;
+            height: 60px;
+        }
+            .select_margin{
+            -webkit-appearance: none;
+            margin-left: auto;
+            margin-right:auto;
+            }
+        .panel-info > .panel-heading {
+            color: #fff;
+            background-color: #b6c94b;
+            border-color: #b6c94b;
+}
+
+         .input-inset[id^=s_]{
+            margin-bottom: -1px;
+             font-size:26px;
+         }
+
+         .input-inset[id=s_county]{
+            margin-bottom: 30px;
+         }
+
+         #dynamicFields .form-control{
+             margin-bottom: 10px;
+         }
+        h2{
+            text-align: center;
+            border-bottom: 2px solid #fff;
+            font-weight: 800;
+            width: 100%;
+            color: #fff;
+            font-size: 30pt;
+        }
+        input{
+            outline-color: transparent;
+            border: 0;
+            padding: 10px 8px;
+        }
+        .personTitle{
+            position: absolute;
+            top: 15%;
+            left: 38%;
+            color:#fff;
+        }
+        .text-center{
+            font-weight: 500;
+            font-size: 20px;
+        }
+        .btn-default{
+            float: right;
+            color: #76b1fd;
+            border: 0;
+            box-shadow: 0 -10px 20px rgba(222,241,249,0.8) inset;
+        }
+        .loginForm{
+            margin-bottom: 10px;
+        }
+        .phoneImage{
+            position: absolute;
+            top: 13px;
+            left: 5%;
+        }
+        .verifyImage{
+            position: absolute;
+            top: 38%;
+            left: 2%;
+        }
+        .btn-lg{
+            display: inline-block;
+            width: 40%;
+            background: #76b1fd;
+            color: #fff;
+            border: 0;
+            outline: 0;
+            margin-top: 20px;
+            margin-left: 16px;
+        }
+        .btn-lg:active{
+            background: #5bd4ff;
+            outline: 0;
+        }
+        .line{
+            border-bottom: 1px solid #5bd4ff;
+        }
+        .register{
+            padding: 5px 13px;
+            border: 1px solid #5bd4ff;
+            background-color: transparent;
+            outline: 0;
+        }
+        .register:active{
+            background-color: #5bd4ff;
+            border: 1px solid #5bd4ff;
+            color:#fff;
+        }
+        .text-center{
+            margin-top:10px;
+        }
+        .text-center:last-child{
+            margin-right: 5px;
+        }
+        .phoneVaild{
+            position: absolute;
+            top: 33%;
+            left: 25%;
+            font-size: 22px;
+            color: #76b1fd;
+        }
+        #registerSuccess{
+            position: absolute;
+            top: 0;
+            z-index: 222;
+            background: #ECF5FC;
+            width: 100%;
+            height: 150%;
+            color:#fff;
+            display: none;
+            font-weight: bold;
+        }
+        #registerSuccess a{
+            color:#fff;
+        }
+        .registerSuccessTotal{
+            width: 100%;
+            height: 100px;
+            background: #57D3FF;
+            font-size: 40px;
+            line-height: 100px;
+            text-align: center;
+        }
+        .getCoupon{
+            width: 50%;
+            margin: 20px auto;
+            background: #57D3FF;
+            height: 75px;
+            line-height: 75px;
+            padding-left: 20px;
+        }
+        .mandatory{
+            color:red;
+            margin-top: 15px;
+            padding-left: 5px;
+        }
+        .region{
+            margin-top: -10px;
+        }

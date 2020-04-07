@@ -1,2 +1,9 @@
-# Wechat_Little_one
-Online store for WeChat Platform
+# Wechat  Project
+
+Online store page of Wechat platform.
+
+## Build & development
+
+Run `CRM platform`  or `WeChat public platform` configuration for preview.
+
+

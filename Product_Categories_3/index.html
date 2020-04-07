@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<title>##title</title>
+	<link rel="stylesheet" type="text/css" href="css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="css/retclub.css">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/jquery.mobile-1.4.5.min.css">
+	<link rel="stylesheet" type="text/css" href="css/thumbnail-gallery.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<!--[if lt IE 9]>
+		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+		<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+	<style>
+		.thumbnail{
+			border: 1px solid #dcdcdc;
+		}
+	</style>
+</head>
+<body>
+	<div class="page pageTop">
+		<div id="knowledgeTop" style="display: block;">
+		<!-- NO background: url('images/banner.png') -->
+			<a href="javascript:void(0)" onclick="javascript:void(0)"style="width:100%; position:relative ">
+				<img src="images/header.jpg" alt="" width="100%" style="margin: auto;">
+				<!-- No images/header.png in the folder-->
+			</a>		 
+		</div>
+		<div class="caption">
+			<ul id="tab">
+				<li data-toggle="tab" class="col-md-4 col-sm-4 col-xs-4 text-center active">
+					<a href="#commodity1">洗护</a>
+				</li>
+				<li data-toggle="tab" class="col-md-4 col-sm-4 col-xs-4 text-center">
+					<a href="#commodity2">服饰</a>
+				</li>
+				<li data-toggle="tab" class="col-md-4 col-sm-4 col-xs-4 text-center">
+					<a href="#commodity3">车床</a>
+				</li>
+			</ul>
+		</div>
+		<div class="tab-content" id="##main_element">
+			<div class=" tab-pane active" id="commodity1">
+	            <div  class="container">
+					<div class="row col-lg-12 col-md-12 col-xs-12">
+						<div class="col-lg-3 col-md-4 col-xs-6 thumb ##retClubRecommendName" >
+							<div class="thumbnail" id="##retClubRecommendName_1">
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-4 col-xs-6 thumb ##retClubRecommendName" >
+							<div class="thumbnail" id="##retClubRecommendName_2">
+							</div>
+						</div>
+					</div>
+					<div class="row col-lg-12 col-md-12 col-xs-12">
+						<div class="col-lg-3 col-md-4 col-xs-6 thumb ##retClubRecommendName" >
+							<div class="thumbnail" id="##retClubRecommendName_3"></div>
+						</div>
+					</div>
+				  <div style="height:70px"></div>
+			   </div>
+		    </div>
+			<div class=" tab-pane" id="commodity2">
+				<div class="row col-lg-12 col-md-12 col-xs-12">
+					<div  class="container text-center" style="margin-top: 200px" >
+						暂无商品，敬请期待!
+					</div>
+				</div>
+			</div>
+			<div class=" tab-pane" id="commodity3">
+				<div class="row col-lg-12 col-md-12 col-xs-12">
+					<div  class="container text-center" style="margin-top: 200px">
+						暂无商品，敬请期待!
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- /.container -->
+	<!--<nav class="navbar navbar-inverse navbar-fixed-bottom ">-->
+        <!--<div class="container">-->
+		    <!--<div class="Cart">-->
+               <!--<a class="shoppingCart" type="button" onclick="register()"></a>-->
+			 <!--<span id="totalCount"></span>-->
+				<!--<span id="totalPriceLabel"></span>-->
+		    <!--</div>-->
+			<!--<div class="confirmOrder">-->
+				<!--<a  class="btn btn-info btn-lg" type="button" onclick="order()" >查看订单</a>-->
+			<!--</div>-->
+		<!--</div>-->
+    <!--</nav>-->
+	<script src="js/jquery-1.11.1.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/i18next-1.7.4.min.js"></script>
+	<script type="text/javascript" src="js/i18nSetting.js"></script>
+	<!-- <script type="text/javascript" src="##retchat_js?v=3"></script> -->
+	<script id="ret-js-template" type="text/javascript"></script>
+	<script type="text/javascript">
+			$('#tab a').click(function (e) {
+				e.preventDefault()
+				$(this).tab('show');
+			});
+	</script>
+	<script>
+	var decodeUnicode = function( x ){
+		var r = /\\u([\d\w]{4})/gi;
+		x = x.replace(r, function (match, grp){
+				return String.fromCharCode(parseInt(grp, 16)); 
+			});
+		return unescape(x);
+	};	
+   /* The function will be called in RET.queryObj.queryEvent() */
+	var drawForWechat = function(ret){
+		var itemList = $( "."+retClubRecommendName );
+		var i=0;
+		for( var itemId in ret ){
+			if( itemList[i] != null){
+				itemList[i].innerHTML = decodeUnicode( ret[ itemId ] );
+				$(itemList[i]).attr('id', itemId);
+				i++;
+			}
+		}
+		retchatCallBack();
+		return retClubRecommendName;	// return for addRecClickMarkAtLink, sendItemImpression
+	};
+
+	var getCookie = function(name){
+		var nameEQ = name + "=";
+		var ca = document.cookie.split(';');
+		for ( var i = 0, limit = ca.length; i < limit; i++) {
+			var c = ca[i];
+			c = c.trim();
+			if (c.indexOf(nameEQ) == 0){
+				return c.substring(nameEQ.length);
+			}
+		}
+		return '';
+	};
+	var extractRootUrl = function (url) {
+		var rootUrl
+		var domain;
+		var matches = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);		
+		rootUrl = matches && matches[0];
+		domain = matches && matches[1];
+		return rootUrl;
+	};	
+	var retchatAccount = "##retchat_id";
+	var elementId = "##main_element";
+	var appid = "##appid";
+	var mchId="##mchId";
+	var clubId = "##clubId";
+	var loginUrl = "##loginUrl";
+	var ua = navigator.userAgent.toLowerCase();
+	var retUrlPrefix="##retUrlPrefix";
+	var retSiteId = "##siteId";
+	var retClubRecommendID = "##retClubRecommendID";
+	var retClubRecommendName = "##retClubRecommendName";
+	var retCert = "##retCert";
+	var shouldLoginRetclubFirst = "##enable_login";
+	var host = "http://##retchat_server";
+	var redirectUri = "http%3A%2F%2F##retchat_server%2Fretclub/##web_folder";
+	var mid = getCookie(retchatAccount);
+	var isLogin = getCookie( "isLogin" + retchatAccount );
+	var orderList = getCookie('cart-' +retchatAccount);
+	(function() {
+		var ret = document.createElement('script');
+		ret.type = 'text/javascript';
+		ret.async = true;
+		ret.src = retUrlPrefix + 'ret.js?' + (new Date().getDate());
+		var currentJs = document.getElementById('ret-js-template');
+		currentJs.parentNode.insertBefore(ret, currentJs);
+		if($(".thumb").children("a").length==0){
+			$(".thumbnail").css("border-color","transparent");
+		}
+	})();
+	$(document).on('click', '.thumbnail', function(event) {
+		var itemCode = $(this).attr('info');
+		if (!itemCode) {
+			return;
+	}
+		doClick(itemCode);
+		$("#light").html($("#data_" + itemCode).html());
+		// $("#light").html($("#data_" + itemCode).html());
+		$('.input-number').val(1);
+		$('.input-number').bind('input', function() {
+		if ($(this).val() > 0 && $(this).val() < 999) {
+			//sync other duplicated input field
+			$('#' + $(this).attr("id")).val($(this).val());
+			return true;
+		} else {
+			alert('请输入1到999');
+			$('#' + $(this).attr("id")).val('');
+			$(this).focus();
+			}
+		});
+		window.scrollTo(0, 0);
+		$("#light").css("display", "block");
+		$("#fade").css("display", "block");
+		$("#" + elementId).css('display', 'none');
+
+	});
+
+	function retchatCallBack() {
+		$(".thumb").each(function() {
+			if ($.trim($(this).html()) == '') $(this).remove();
+		});
+		$(".row").each(function() {
+			if ($.trim($(this).html()) == '') $(this).remove();
+		});
+		$(".addCartBtn").show();
+	}
+	function getParameterByName(name) {
+		name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+		var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
+		return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+	}
+	function totalPrice(){
+			var total=0;
+			$("#tab1 td").each(function(){
+			total+=parseInt($(this).find('.text_box').val())*parseFloat($(this).find('.itemPrice').text());
+			});
+			$("#totalPriceLabel").html("共计"+total.toFixed(2)+"元");
+	 	 }
+		totalPrice();
+	function totalCount(){
+		var sum=0;
+		$(".text_box").each(function(){
+		sum+=parseInt($(this).val());
+		 });
+		$("#totalCount").html(sum+"件");
+        }
+		totalCount();
+	function plusCount(id) {
+		var count = $('#'+id).find('.text_box');
+		if (1000>parseInt(count.val())>=0) {
+			count.val(parseInt(count.val())+1);
+		}
+		totalPrice();
+		totalCount();
+	}
+	function minusCount(id) {
+		var count = $('#'+id).find('.text_box');
+		if (parseInt(count.val())> 0) {
+			count.val(parseInt(count.val()) - 1);
+		}
+		else if(parseInt(count.val())<=-1){
+			count.val(0);
+		}
+		totalPrice();
+		totalCount();
+	}
+	function detail(code){
+		localStorage.setItem("code", code);
+		window.location="##detail_address";
+	}
+	function goToIndex() {
+		$("#light").css("display", "none");
+		$("#fade").css("display", "none");
+		$("#" + elementId).css('display', 'block');
+	   }
+	function addCart(itemCode){
+		var count=1;
+		if(count > 0 && count <= 999){
+			var orderList = getCookie('cart-' +retchatAccount);
+			var newItem = {};
+			if(!orderList){
+				orderList = [];
+				newItem.code = itemCode;
+				newItem.count = count;
+				var total=0;
+				orderList.push(newItem);
+			}else{
+				orderList  = JSON.parse(orderList );
+				var isNew = true;
+				$.each(orderList, function( index, item ) {
+					if(item.code == itemCode){
+						if(item.count > 0){
+							item.count  = item.count+count;
+							isNew = false;
+						}
+					}
+				});
+				if(isNew){
+					newItem.code = itemCode;
+					newItem.count = count;
+					orderList.push(newItem);
+				}
+			}
+			RET.cookieObj.setLocalCookie( "cart-" + retchatAccount, JSON.stringify(orderList), 3650 );
+			//alert(i18n.t('addShoppingCart.success'));
+		}
+	}
+	function reduceCart(itemCode){
+	  var count=1;
+		if(count > 0 && count <= 999){
+			var orderList = getCookie('cart-' +retchatAccount);
+			var newItem = {};
+			if(!orderList){
+				orderList = [];
+				newItem.code = itemCode;
+				newItem.count = count;
+				orderList.push(newItem);
+			}else{
+				orderList  = JSON.parse(orderList );
+				var isNew = true;
+				$.each(orderList, function( index, item ) {
+					if(item.code == itemCode){
+						if(item.count > 0){
+							item.count  = item.count - count;
+							isNew = false;
+						}
+					}
+				});
+				if(isNew){
+					newItem.code = itemCode;
+					newItem.count = count;
+					orderList.push(newItem);
+				}
+			}
+	    RET.cookieObj.setLocalCookie( "cart-" + retchatAccount, JSON.stringify(orderList), 3650 );
+			//alert(i18n.t('addShoppingCart.success'));
+		}
+	}
+	function register() {
+		if(isLogin == "1") {
+			window.location ="##shopping_address";
+			return;
+		}
+		if (isLogin == "0") {
+			window.location = "##user_address";
+			return;
+		}
+		$.get(loginUrl + mid, function(resp) {
+			var isMemberExisted = resp.data;
+
+			if ( ! isMemberExisted ) {
+				RET.cookieObj.setLocalCookie( "isLogin" + retchatAccount, 0, 3650 );
+				window.location = "##user_address";
+			}
+			else{
+				isLogin = "1";
+				window.location ="##shopping_address";
+			}
+		});
+	}
+	function order(){
+	  window.location =("##order_address");
+	}
+	function personal(){
+      window.location =("##user_address");
+	}
+	</script>
+</body>
+</html>
+

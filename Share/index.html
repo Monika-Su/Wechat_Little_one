@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<title>##title</title>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<!--[if lt IE 9]>
+		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+		<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+</head>
+<body>
+<div class="container">
+	<div class="page ">
+		<img src="images/backgroundImg.jpg" alt=""/>
+	</div>
+</div>
+	<div class="headerIcon">
+		<img src="" id="pointIcon" class="media-object">
+		<label id="label_account"></label>
+	</div>
+<div class="joinContent">
+	<div class="InviteJoin">
+		<p>邀请您加入</p>
+		<p>#Little One，进口母婴精品生活馆#</p>
+	</div>
+</div>
+<div class="qrArea " >
+			 <img src="" id="qrcodeUrl">
+	<div class="productDetails">
+		这是我的专属二维码
+	</div>
+	<p class="fontStyle">邀请5位朋友成功注册，</p>
+	<p class="fontStyle">可到店领取进口奶瓶一个!</p>
+ </div>
+
+<div class="myClicent">
+	<span class="down">
+		<canvas id="downCanvas" width="50" height="50"></canvas>
+	</span>
+</div>
+<span class="Ctbtn">
+		<a class="clicentBtn" href="##distribution_customer">我的客户</a>
+</span>
+	<script src="js/jquery-1.11.1.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/i18next-1.7.4.min.js"></script>
+	<script type="text/javascript" src="js/i18nSetting.js"></script>
+	<!-- <script type="text/javascript" src="##retchat_js?v=3"></script> -->
+	<script id="ret-js-template" type="text/javascript"></script>
+	<script>
+	var retUrlPrefix="##retUrlPrefix";
+	var retSiteId = ##siteId;
+	var retCert = "##retCert";
+	var shouldLoginRetclubFirst = ##enable_login;
+	(function() {
+		var ret = document.createElement('script');
+		ret.type = 'text/javascript';
+		ret.async = true;
+		ret.src = retUrlPrefix + 'ret.js?' + (new Date().getDate());
+		var currentJs = document.getElementById('ret-js-template');
+		currentJs.parentNode.insertBefore(ret, currentJs);
+	})();
+	var getCookie = function(name){
+		var nameEQ = name + "=";
+		var ca = document.cookie.split(';');
+		for ( var i = 0, limit = ca.length; i < limit; i++) {
+			var c = ca[i];
+			c = c.trim();
+			if (c.indexOf(nameEQ) == 0){
+				return c.substring(nameEQ.length);
+			}
+		}
+		return '';
+	};
+	var extractRootUrl = function (url) {
+		var rootUrl
+		var domain;
+		var matches = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);		
+		rootUrl = matches && matches[0];
+		domain = matches && matches[1];
+		return rootUrl;
+	};
+	var retchatAccount = "##retchat_id";
+	var appid = "##appid";
+	var WECHAT_PUBLIC_OPENID_COOKIE = appid + "__wopenid";
+	var clubId = "##clubId";
+	var host = extractRootUrl( retUrlPrefix ); //"http://##retchat_server";
+	//var dataUrl = host + "http://##retchat_server/ipcrm-manager/api/ipcrm/public/point?siteId=" + retSiteId + "&member=";
+	var urlMember = host + "agent/wechat/getRetclubMemberInfo?siteId=" + retSiteId + "&accountName=";
+	var loadQrcodeUrl = host + "agent/wechat/loadQRCode?clubId=##clubId&accountName=";
+	var ua = navigator.userAgent.toLowerCase();
+	var ticket = getParameterByName("ticket");
+	var mid = getCookie(retchatAccount);
+	if(ticket){
+		mid = getParameterByName("mid");
+		$("#qrcodeUrl").attr("src","https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket="+ticket);		
+			
+		if( typeof(mid) != "undefined" && mid.length > 0 ){
+			$.ajax({
+				url: urlMember + mid,
+				cache: false,
+				type: "GET",
+				dataType: "json",
+				success: function( resp ) {
+					if( resp.data.name ){
+						$("#label_account").text( resp.data.name);
+					}else{
+						$("#label_account").text( resp.data.accountName);
+					}
+					if( resp.data.headimgurl ){
+						$('#pointIcon').attr( 'src', resp.data.headimgurl );
+					}else{
+						$('#pointIcon').attr( 'src', 'images/points.png');
+					}
+				},
+				error: function(a) {
+				}
+			});
+		}
+	}else{
+		loadQrcode();
+	}
+	function loadQrcode() {
+		$.get(loadQrcodeUrl + mid, function(resp) {
+			if(resp){
+				window.location.href = 'index.html?ticket=' + resp.data + '&mid=' + mid;
+			}
+		});
+	}
+	function getParameterByName(name) {
+		name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+		var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+			results = regex.exec(location.search);
+		return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+	}
+	function drawDown() {
+		var c = document.getElementById("downCanvas");
+		console.log(c);
+		var cxt = c.getContext("2d");
+		cxt.beginPath();
+		cxt.moveTo(30,10);
+		cxt.lineTo(45,25);
+		cxt.lineTo(31,40);
+		cxt.lineWidth = 5;
+		cxt.strokeStyle = "#1E2F63";
+		cxt.lineCap = 'round';
+		cxt.lineJoin = "round";
+		cxt.stroke();
+		cxt.moveTo(20,10);
+		cxt.lineTo(35,25);
+		cxt.lineTo(21,40);
+		cxt.lineWidth = 5;
+		cxt.strokeStyle = "#1E2F63";
+		cxt.lineCap = 'round';
+		cxt.lineJoin = "round";
+		cxt.stroke();
+	}
+	drawDown()
+	</script>
+</body>
+</html>
+

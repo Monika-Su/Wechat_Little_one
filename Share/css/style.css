@@ -1,0 +1,194 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+body{
+  background-color:#f5f5f5;
+    text-align: center;
+    font-size: 13px;
+    font-family: "微软雅黑";
+    overflow: hidden;
+    font-weight: 800;
+    color: #435E89;
+}
+html, body ,.container{
+    width: 100%;
+    height: 100%;
+}
+.container .page {
+    height: 100%;
+}
+.page>img{
+    width:100%;
+    height: 100%;
+}
+.colorblock{
+	text-align:center;
+	background-color: #ededef;
+	width:100%;
+	height:70%;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	color:#777777;
+	text-align:center;
+	font-size: larger;
+}
+.top-info{
+    margin-bottom:5px;
+}
+.qrArea{
+    width: 60%;
+    height: 36%;
+    margin: 0 auto;
+    position: absolute;
+    left: 23%;
+    top: 18%;
+}
+.qrArea img{
+    width: 100%;
+    height: 100%;
+}
+.recommend{
+    margin-top:60px;
+	height:100%;
+}
+.recommend>img{
+    width:100%;
+    height:100%;
+}
+.headerIcon{
+    position: absolute;
+    top: 3%;
+    left: 5%;
+}
+.headerIcon>img{
+    height: 50px;
+    width:50px;
+    border: 4px solid #1e2f63;
+    border-radius: 50%;
+    float: left;
+}
+.navbar-default {
+    border-bottom: 2px solid transparent;
+}
+.joinContent{
+    position: absolute;
+    width: 100%;
+    top: 2rem;
+}
+.InviteJoin{
+    text-align: right;
+    padding-right: 10px;
+}
+.remind{
+    margin-top:15px;
+    background-color: rgba(255,255,255,0.5);
+    width: 100%;
+    font-size:18px;
+}
+.productDetails{
+    margin:5px  auto;
+    background: #1E2F63;
+    font-size: 18px;
+    color: #fff;
+    font-weight: bold;
+    height: 35px;
+    line-height: 35px;
+    border: 1px solid #ccc;
+}
+.fontStyle{
+    color:#1E2F63;
+    font-size: 16px;
+    font-weight: bold;
+}
+.joinBottom{
+    margin: 130px auto;
+}
+h4{
+    padding-top:5px;
+}
+h3{
+    margin-top:15px;
+    padding-bottom:5px;
+}
+p{
+    padding-bottom: 5px;
+}
+#label_account{
+    display: inline-block;
+    height: 50px;
+    float: left;
+    line-height: 50px;
+    padding-left: 10px;
+    font-size: 20px;
+}
+.myClicent{
+    position: absolute;
+    bottom: -5px;
+     left: 38%;
+}
+.clicentBtn{
+    padding: 5px 20px;
+    font-size: 18px;
+    border: 0;
+    color: #1E2F63;
+    background: transparent;
+    font-weight: bold;
+    text-decoration: none;
+    line-height: 30px;
+}
+.Ctbtn{
+    position: absolute;
+    bottom: 5px;
+    right: 10%;
+}
+.down {
+    padding-top: 50px;
+    text-align: center;
+    height: 150px;
+    -moz-animation: myMove 1s linear infinite alternate;
+    -webkit-animation: myMove 1s linear infinite alternate;
+    -o-animation: myMove 1s linear infinite alternate;
+    animation: myMove 1s linear infinite alternate;
+}
+@-webkit-keyframes dong {
+    from {
+        left:20px
+    }
+    to {
+        left:60px;
+    }
+}
+@-moz-keyframes myMove {
+    0% {
+        padding-left:30px;
+    }
+    100% {
+        padding-left:50px;
+    }
+}
+@-webkit-keyframes myMove {
+    0% {
+        padding-left:30px;
+    }
+    100% {
+        padding-left:50px;
+    }
+}
+@-o-keyframes myMove {
+    0% {
+        padding-left:30px;
+    }
+    100% {
+        padding-left:50px;
+    }
+}
+@keyframes myMove {
+    0% {
+        padding-left:30px;
+    }
+    100% {
+        padding-left:50px;
+    }
+}

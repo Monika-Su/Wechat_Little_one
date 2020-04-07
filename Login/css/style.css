@@ -1,0 +1,95 @@
+@charset "utf-8";
+* { 
+	margin: 0; 
+	padding: 0; 
+}
+html, body {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	font-size:16px;
+	font-family: "微软雅黑";
+	font-weight: 800;
+}
+ .page {
+	width: 100%;
+	height: 100%;
+}
+.page>img{
+	 width:100%;
+	 height: 100%;
+ }
+.content{
+	position: absolute;
+	top:30%;
+	color:#fff;
+	padding-top:10px;
+	left:10%;
+
+}
+p:first-child{
+	padding-left:40px;
+}
+p{
+	margin-top:8px;
+	/*display: none;*/
+}
+.loginForm{
+	margin-bottom: 10px;
+}
+.btn-default{
+	position: absolute;
+	top: 20.5%;
+	right: 0;
+	padding: 8px 20px;
+	color: #76b1fd;
+	border: 0;
+	box-shadow: 0 -10px 20px rgba(222,241,249,0.8) inset;
+}
+.phoneImage{
+	position: absolute;
+	top: 13px;
+	left: 5%;
+}
+.verifyImage{
+	position: absolute;
+	top: 22%;
+	left: 2%;
+}
+.btn-lg{
+	display: block;
+	width: 100%;
+	background: #76B1FD;
+	color: #fff;
+	border: 0;
+	margin-top: 40px;
+	margin-bottom: 30px;
+	outline: 0;
+}
+.btn-lg:active{
+   opacity: 0.5;
+	outline: 0;
+}
+.line{
+	border-bottom: 1px solid #5bd4ff;
+}
+.register{
+	padding: 5px 13px;
+	border: 1px solid #5bd4ff;
+	background-color: transparent;
+	outline: 0;
+}
+.register:active{
+	background-color: #5bd4ff;
+	border: 1px solid #5bd4ff;
+	color:#fff;
+}
+.text-center{
+	margin-top:10px;
+}
+.text-center:last-child{
+	margin-right: 5px;
+}
+.memberColor{
+	color:#76b1fd;
+}

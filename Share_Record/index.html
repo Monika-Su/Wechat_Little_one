@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<title>##title</title>
+	<link rel="stylesheet" type="text/css" href="css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/jquery.mobile-1.4.5.min.css">
+	<link rel="stylesheet" type="text/css" href="css/thumbnail-gallery.css">
+	<link rel="stylesheet" type="text/css" href="css/retclub.css">
+	<!--[if lt IE 9]>
+		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+		<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+</head>
+<body>
+	<div id="next" style="display:block">
+			<div id='closeDetail' class="back-header">
+				<div class="back-header-title" id="levelDetailTitle">我的客户&lt;
+				<span id="clientCount"></span>&gt;
+				</div>
+			</div>
+			<!--<div>-->
+			<!--</div>	&lt;!&ndash;<ul class="nav nav-pills">&ndash;&gt;-->
+				<!--<li id="lv1Tab" role="presentation" style="background-color: #FFFFFF;width: 30%;text-align: center; margin-left: 5%; margin-bottom: 10px; margin-top: 10px;" class="active"><a href="javascript:lv1()">一层客户</a></li>-->
+			<!--</ul>-->
+			<div id='nextDetail' class="list-group"></div>
+	 </div>
+	<!-- /.container -->
+	<div id="footer" class="footer" style="">
+		<img id="footer_logo" class="footer_logo" src="">
+	</div>
+	<!-- jQuery -->
+	<script src="js/jquery-1.11.1.min.js"></script>
+	<!-- Bootstrap Core JavaScript -->
+	<script src="js/bootstrap.min.js"></script>
+	<!-- jQuery Mobile -->
+	<script type="text/javascript" src="js/i18next-1.7.4.min.js"></script>
+	<script type="text/javascript" src="js/i18nSetting.js"></script>
+	<!-- <script type="text/javascript" src="##retchat_js?v=3"></script> -->
+	<script id="ret-js-template" type="text/javascript"></script>
+	
+	<script>
+	var retUrlPrefix="##retUrlPrefix";
+	var retSiteId = ##siteId;
+	var retCert = "##retCert";
+	var shouldLoginRetclubFirst = ##enable_login;
+	
+	(function() {
+		var ret = document.createElement('script');
+		ret.type = 'text/javascript';
+		ret.async = true;
+		ret.src = retUrlPrefix + 'ret.js?' + (new Date().getDate());
+		var currentJs = document.getElementById('ret-js-template');
+		currentJs.parentNode.insertBefore(ret, currentJs);
+	})();
+	
+	var getCookie = function(name){
+		var nameEQ = name + "=";
+		var ca = document.cookie.split(';');
+		for ( var i = 0, limit = ca.length; i < limit; i++) {
+			var c = ca[i];
+			c = c.trim();
+			if (c.indexOf(nameEQ) == 0){
+				return c.substring(nameEQ.length);
+			}
+		}
+		return '';
+	};
+	
+	var extractRootUrl = function (url) {
+		var rootUrl
+		var domain;
+		var matches = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);		
+		rootUrl = matches && matches[0];
+		domain = matches && matches[1];
+		return rootUrl;
+	};
+	var retchatAccount = "##retchat_id";
+	var elementId = "##main_element";
+	var appid = "##appid";
+	var clubId = "##clubId";
+	var WECHAT_PUBLIC_OPENID_COOKIE = appid + "__wopenid";
+	var host = extractRootUrl( retUrlPrefix ); //"http://##retchat_server";
+	//var dataUrl = host + "/ipcrm-manager/api/ipcrm/public/point?siteId=" + retSiteId + "&member=";
+	var urlMember = host + "agent/wechat/getRetclubMemberInfo?siteId=" + retSiteId + "&accountName=";
+	var redirectUri = "http%3A%2F%2F##retchat_server%2Fretclub/##web_folder";
+	var loadMemberUrl = host + "agent/wechat/getRetclubChildren?siteId=" + retSiteId + "&memberListStr=";
+	var ua = navigator.userAgent.toLowerCase();
+	var mid = getCookie(retchatAccount);
+	var isLogin = getCookie( "isLogin" + retchatAccount );
+	
+	var lv1Json = "",
+		lv2Json = "",
+		lv3Json = "";
+		
+	var userId = null;
+
+	if ( typeof(mid) != "undefined"  && mid.length > 0 ) {
+		$.ajax({
+			url: urlMember + mid,
+			cache: false,
+			type: "GET",
+			dataType: "json",
+			async: false,
+			success: function( resp ) {
+				if( !resp.data )
+					return;
+				if( resp.data.phoneNumber ){
+					$("#label_phone").text( resp.data.phoneNumber );
+				}
+				if( resp.data.name ){
+					$("#label_account").text( resp.data.name );
+				}else{
+					$("#label_account").text( resp.data.accountName );
+				}
+				if( resp.data.headimgurl ){
+					$('#pointIcon').attr( 'src', resp.data.headimgurl );
+				}else{
+					$('#pointIcon').attr( 'src', 'images/points.png' );
+				}
+				if( !resp.data.memberEnable ){
+					$('#memberInActive').show();
+					$('#memberActive').hide();
+				}
+				userId = resp.data.memberId;
+			},
+			error: function(a) {}
+		});
+	}
+	
+	var downlineMember = getParameterByName("mid");
+	if(downlineMember){
+		mid = downlineMember;
+		jQuery.ajax({
+			url: urlMember + mid,
+			success: function (resp) {
+				userId = resp.data.memberId;
+			},
+			async: false
+		});
+		loadNextMember( userId);
+//		$('#generateQRCode').hide();
+
+	}
+	else{
+		loadNextMember( userId);
+	}
+
+	if ($('#logoImg').attr('src') != '') {
+		$('#iheader').css('display', 'block');
+	}
+
+	if ($('#footer_logo').attr('src') != '') {
+		$('#footer').css('display', 'block');
+	}
+
+	function loadNextMember(id) {
+		if( id == null || id.length == 0)
+			return;
+		$.get(loadMemberUrl + id, function(resp) {
+			if( resp.data.length > 0 ) {
+					$("#clientCount").html( resp.data.length );
+					var ids = '';
+					$.each( resp.data, function(i) {
+					   generateMember( resp.data[i]);
+						ids += resp.data[i].memberId + ","
+					});
+					ids = ids.slice(0, -1);
+					console.log(ids,1);
+					loadNextMember( ids,2);
+//				else if (level == 2) {
+//					$("#lv2Count").html( resp.data.length + " &raquo;" );
+//					var ids = '';
+//					$.each( resp.data, function(i) {
+//						lv2Json += generateMember( resp.data[i] );
+//						ids += resp.data[i].memberId + ","
+//					});
+//					ids = ids.slice(0, -1);
+//					loadNextMember( ids, 3 );
+//				} else if (level == 3) {
+//					$("#levelDetailTitle").html( resp.data.length);
+//					$.each( resp.data, function(i) {
+//						lv3Json += generateMember( resp.data[i] );
+//					// console.log(ids);
+//					});
+//				}
+			}
+		})
+		.fail(function() {
+			alert('fail: loadMemberUrl + id = ' + loadMemberUrl + id);
+		});
+	}
+	function generateMember(member){
+		var json ='';
+		json += '<div class="list-group-item" style="backgrouncolor:#eeeeee; border:2px solid white" align="center" onclick="clickMember(&quot;'+ member.accountName + '&quot;)" ><div class="outter" style="width:50px; height:50px">';
+		json += '<img src="' + member.headimgurl + '" id="pointIcon" class="image-circle" style="width:50px; height:50px" /></div><div class="account-info" style="margin-bottom:0px">';
+		json += '<img src="images/telephone.png" style="height: 30px; vertical-align: middle;background-color: #b6c94b; border-radius: 20px;	width: 8% !important;height: auto !important;">&nbsp<label id="label_phone">' + (member.phoneNumber == null ? '电话未登记' : member.phoneNumber) + '</label>';
+		json += '</div><div class="account-info" style="margin-bottom: 0px;"><label id="label_account">' + member.name + '<label></div></div>';
+		$("#nextDetail").append(json );
+	}
+
+//	function clickMember(id){
+//		if(!downlineMember){
+//			window.location.href = "index.html?mid=" + id;
+//		}else{
+//
+//		}
+//	}
+
+//	function lv1() {
+//		if(lv1Json.length > 0){
+//			$("#nextDetail").html(lv1Json);
+//			$("#top").css('display', 'none');
+//			$("#next").css('display', 'block');
+//			$(".container-fluid").hide();
+//			$('#levelDetailTitle').text("一层客户");
+//			$('#lv1Tab').addClass('active');
+//			$('#lv2Tab').removeClass('active');
+//			$('#lv3Tab').removeClass('active');
+//		}
+//	}
+
+//	$("#lv1").click(lv1);
+
+//	function lv2() {
+//		if(lv2Json.length > 0){
+//			$("#nextDetail").html(lv2Json);
+//			$("#top").css('display', 'none');
+//			$("#next").css('display', 'block');
+//			$(".container-fluid").hide();
+//			$('#levelDetailTitle').text("二层客户");
+//			$('#lv1Tab').removeClass('active');
+//			$('#lv2Tab').addClass('active');
+//			$('#lv3Tab').removeClass('active');
+//		}
+//	}
+//
+//	$("#lv2").click(lv2);
+//
+//	function lv3(){
+//		if(lv3Json.length > 0){
+//			$("#nextDetail").html(lv3Json);
+//			$("#top").css('display', 'none');
+//			$("#next").css('display', 'block');
+//			$(".container-fluid").hide();
+//			$('#levelDetailTitle').text("三层客户");
+//			$('#lv1Tab').removeClass('active');
+//			$('#lv2Tab').removeClass('active');
+//			$('#lv3Tab').addClass('active');
+//		}
+//	}
+//
+//	$("#lv3").click(lv3);
+//
+//	$("#closeDetail").click(function() {
+//		$("#top").css('display', 'block');
+//		$("#next").css('display', 'none');
+//		$(".container-fluid").show();
+//	});
+
+	function getParameterByName(name) {
+		name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+		var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+			results = regex.exec(location.search);
+		return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+	}
+	</script>
+</body>
+
+</html>
